@@ -1,0 +1,18 @@
+{
+  "extends": "@glamo/config/tsconfig/react-native.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@glamo/shared": ["../../packages/shared/src"],
+      "@glamo/validators": ["../../packages/validators/src"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

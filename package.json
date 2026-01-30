@@ -1,0 +1,74 @@
+{
+  "name": "glamo",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Glamo - Plataforma SaaS para gestão de salões de beleza, clínicas de estética e negócios de bem-estar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glamo/glamo.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Glamo Team",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "dev:api": "turbo run dev --filter=@glamo/api",
+    "dev:web": "turbo run dev --filter=@glamo/web",
+    "dev:booking": "turbo run dev --filter=@glamo/booking",
+    "dev:mobile": "turbo run dev --filter=@glamo/mobile",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:coverage": "turbo run test:coverage",
+    "test:e2e": "turbo run test:e2e",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "clean:turbo": "rm -rf .turbo node_modules/.cache/turbo",
+    "db:generate": "turbo run db:generate",
+    "db:push": "turbo run db:push",
+    "db:migrate": "turbo run db:migrate",
+    "db:migrate:dev": "turbo run db:migrate:dev",
+    "db:seed": "turbo run db:seed",
+    "db:studio": "turbo run db:studio",
+    "prepare": "husky install",
+    "postinstall": "turbo run db:generate"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.4",
+    "turbo": "^2.0.0",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "pnpm@8.15.1",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "dependencies": {
+    "pg": "^8.17.2"
+  }
+}

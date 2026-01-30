@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Ruby Theme Colors */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 11%;
+    
+    /* Ruby as primary color (350° hue) */
+    --primary: 350 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 350 20% 96%;
+    --secondary-foreground: 350 70% 35%;
+    
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    
+    --accent: 350 70% 97%;
+    --accent-foreground: 350 70% 40%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 350 70% 50%;
+    --radius: 0.75rem;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 11%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

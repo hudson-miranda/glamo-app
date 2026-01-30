@@ -1,0 +1,264 @@
+import {
+  AbilityBuilder,
+  createMongoAbility,
+  MongoAbility,
+  AbilityClass,
+  ExtractSubjectType,
+  InferSubjects,
+} from '@casl/ability';
+import { Injectable } from '@nestjs/common';
+import { UserRole } from '@glamo/database';
+import { AuthenticatedUser } from '../interfaces';
+
+/**
+ * Tipos de ações disponíveis no sistema
+ */
+export type Action = 'manage' | 'create' | 'read' | 'update' | 'delete';
+
+/**
+ * Subjects representando as entidades do sistema
+ */
+export type Subjects =
+  | 'Tenant'
+  | 'User'
+  | 'Professional'
+  | 'Client'
+  | 'Service'
+  | 'ServiceCategory'
+  | 'Appointment'
+  | 'Transaction'
+  | 'Product'
+  | 'Inventory'
+  | 'Campaign'
+  | 'Commission'
+  | 'LoyaltyProgram'
+  | 'Subscription'
+  | 'Report'
+  | 'Settings'
+  | 'Integration'
+  | 'Notification'
+  | 'all';
+
+/**
+ * Tipo de Ability do CASL
+ */
+export type AppAbility = MongoAbility<[Action, Subjects]>;
+
+/**
+ * Factory para criar abilities baseadas no role do usuário
+ */
+@Injectable()
+export class CaslAbilityFactory {
+  /**
+   * Cria ability baseada no usuário autenticado
+   */
+  createForUser(user: AuthenticatedUser): AppAbility {
+    const { can, cannot, build } = new AbilityBuilder<AppAbility>(
+      createMongoAbility as AbilityClass<AppAbility>,
+    );
+
+    switch (user.role) {
+      case UserRole.OWNER:
+        this.defineOwnerAbilities(can, cannot, user);
+        break;
+      case UserRole.ADMIN:
+        this.defineAdminAbilities(can, cannot, user);
+        break;
+      case UserRole.MANAGER:
+        this.defineManagerAbilities(can, cannot, user);
+        break;
+      case UserRole.PROFESSIONAL:
+        this.defineProfessionalAbilities(can, cannot, user);
+        break;
+      case UserRole.STAFF:
+        this.defineStaffAbilities(can, cannot, user);
+        break;
+      default:
+        // Sem permissões
+        break;
+    }
+
+    return build({
+      detectSubjectType: (item) =>
+        item.constructor as ExtractSubjectType<Subjects>,
+    });
+  }
+
+  /**
+   * OWNER - Acesso total ao tenant
+   */
+  private defineOwnerAbilities(
+    can: AbilityBuilder<AppAbility>['can'],
+    cannot: AbilityBuilder<AppAbility>['cannot'],
+    user: AuthenticatedUser,
+  ): void {
+    // Owner pode fazer tudo dentro do seu tenant
+    can('manage', 'all');
+  }
+
+  /**
+   * ADMIN - Quase tudo, exceto gerenciar o tenant
+   */
+  private defineAdminAbilities(
+    can: AbilityBuilder<AppAbility>['can'],
+    cannot: AbilityBuilder<AppAbility>['cannot'],
+    user: AuthenticatedUser,
+  ): void {
+    // Admin pode gerenciar quase tudo
+    can('manage', 'User');
+    can('manage', 'Professional');
+    can('manage', 'Client');
+    can('manage', 'Service');
+    can('manage', 'ServiceCategory');
+    can('manage', 'Appointment');
+    can('manage', 'Transaction');
+    can('manage', 'Product');
+    can('manage', 'Inventory');
+    can('manage', 'Campaign');
+    can('manage', 'Commission');
+    can('manage', 'LoyaltyProgram');
+    can('manage', 'Report');
+    can('manage', 'Notification');
+    can('read', 'Settings');
+    can('update', 'Settings');
+    can('read', 'Integration');
+    can('update', 'Integration');
+
+    // Não pode gerenciar tenant ou subscription
+    cannot('manage', 'Tenant');
+    cannot('manage', 'Subscription');
+  }
+
+  /**
+   * MANAGER - Gerencia operações do dia-a-dia
+   */
+  private defineManagerAbilities(
+    can: AbilityBuilder<AppAbility>['can'],
+    cannot: AbilityBuilder<AppAbility>['cannot'],
+    user: AuthenticatedUser,
+  ): void {
+    // Leitura em quase tudo
+    can('read', 'User');
+    can('read', 'Settings');
+    can('read', 'Report');
+
+    // Gerenciamento de profissionais
+    can('manage', 'Professional');
+
+    // Gerenciamento de clientes
+    can('manage', 'Client');
+
+    // Gerenciamento de serviços
+    can('manage', 'Service');
+    can('manage', 'ServiceCategory');
+
+    // Gerenciamento de agendamentos
+    can('manage', 'Appointment');
+
+    // Gerenciamento de produtos e estoque
+    can('manage', 'Product');
+    can('manage', 'Inventory');
+
+    // Gerenciamento de transações
+    can('read', 'Transaction');
+    can('create', 'Transaction');
+    can('update', 'Transaction');
+
+    // Gerenciamento de campanhas
+    can('manage', 'Campaign');
+
+    // Comissões
+    can('read', 'Commission');
+
+    // Notificações
+    can('manage', 'Notification');
+
+    // Não pode deletar transações ou gerenciar configurações sensíveis
+    cannot('delete', 'Transaction');
+    cannot('manage', 'User');
+    cannot('manage', 'Tenant');
+    cannot('manage', 'Subscription');
+    cannot('manage', 'Integration');
+  }
+
+  /**
+   * PROFESSIONAL - Acesso às próprias informações e agendamentos
+   */
+  private defineProfessionalAbilities(
+    can: AbilityBuilder<AppAbility>['can'],
+    cannot: AbilityBuilder<AppAbility>['cannot'],
+    user: AuthenticatedUser,
+  ): void {
+    // Pode ler clientes
+    can('read', 'Client');
+
+    // Pode ler serviços
+    can('read', 'Service');
+    can('read', 'ServiceCategory');
+
+    // Pode gerenciar seus próprios agendamentos
+    can('manage', 'Appointment');
+
+    // Pode ver suas próprias comissões
+    can('read', 'Commission');
+
+    // Pode ler produtos
+    can('read', 'Product');
+
+    // Notificações próprias
+    can('read', 'Notification');
+
+    // Pode atualizar seu próprio perfil de profissional
+    can('read', 'Professional');
+    can('update', 'Professional');
+
+    // Restrições
+    cannot('create', 'Client');
+    cannot('delete', 'Client');
+    cannot('manage', 'User');
+    cannot('manage', 'Transaction');
+    cannot('manage', 'Inventory');
+    cannot('manage', 'Campaign');
+    cannot('manage', 'Settings');
+  }
+
+  /**
+   * STAFF - Acesso básico para recepção/atendimento
+   */
+  private defineStaffAbilities(
+    can: AbilityBuilder<AppAbility>['can'],
+    cannot: AbilityBuilder<AppAbility>['cannot'],
+    user: AuthenticatedUser,
+  ): void {
+    // Pode gerenciar clientes
+    can('manage', 'Client');
+
+    // Pode gerenciar agendamentos
+    can('manage', 'Appointment');
+
+    // Pode ler serviços e profissionais
+    can('read', 'Service');
+    can('read', 'ServiceCategory');
+    can('read', 'Professional');
+
+    // Pode ler produtos
+    can('read', 'Product');
+
+    // Pode criar transações (vendas)
+    can('read', 'Transaction');
+    can('create', 'Transaction');
+
+    // Notificações
+    can('read', 'Notification');
+
+    // Restrições
+    cannot('manage', 'User');
+    cannot('update', 'Transaction');
+    cannot('delete', 'Transaction');
+    cannot('manage', 'Inventory');
+    cannot('manage', 'Commission');
+    cannot('manage', 'Campaign');
+    cannot('manage', 'Settings');
+    cannot('manage', 'Report');
+  }
+}

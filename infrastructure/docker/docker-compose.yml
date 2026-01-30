@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # ===========================================
+  # DATABASE - PostgreSQL
+  # ===========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: glamo-postgres
+    restart: unless-stopped
+    ports:
+      - '5555:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: glamo_dev
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d glamo_dev']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - glamo-network
+
+  # ===========================================
+  # CACHE - Redis
+  # ===========================================
+  redis:
+    image: redis:7-alpine
+    container_name: glamo-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - glamo-network
+
+  # ===========================================
+  # EMAIL - MailHog (Development)
+  # ===========================================
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: glamo-mailhog
+    restart: unless-stopped
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - glamo-network
+
+  # ===========================================
+  # ADMINER - Database Management UI
+  # ===========================================
+  adminer:
+    image: adminer:latest
+    container_name: glamo-adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: pepa-linha-dark
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - glamo-network
+
+  # ===========================================
+  # REDIS COMMANDER - Redis Management UI
+  # ===========================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: glamo-redis-commander
+    restart: unless-stopped
+    ports:
+      - '8081:8081'
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - glamo-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  glamo-network:
+    driver: bridge
+    name: glamo-network

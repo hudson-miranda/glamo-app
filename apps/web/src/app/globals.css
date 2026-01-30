@@ -1,0 +1,317 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
+
+    /* Ruby Red - Principal */
+    --primary: 350 70% 35%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 8%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    /* Ruby accent */
+    --accent: 350 70% 97%;
+    --accent-foreground: 350 70% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 350 70% 35%;
+
+    --radius: 0.625rem;
+
+    /* Custom Ruby colors */
+    --ruby-50: 350 70% 97%;
+    --ruby-100: 350 65% 94%;
+    --ruby-200: 350 60% 88%;
+    --ruby-300: 350 55% 78%;
+    --ruby-400: 350 60% 58%;
+    --ruby-500: 350 70% 45%;
+    --ruby-600: 350 70% 35%;
+    --ruby-700: 350 75% 28%;
+    --ruby-800: 350 78% 22%;
+    --ruby-900: 350 80% 18%;
+  }
+
+  .dark {
+    --background: 0 0% 5%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 350 65% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 350 50% 12%;
+    --accent-foreground: 350 65% 80%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 350 65% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer components {
+  /* Glamo Design System - Ruby Theme */
+  
+  /* Primary Button - Use these classes directly in components */
+  .btn-primary {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(to right, #d32f4c, #b1233d);
+    color: white;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 10px 15px -3px rgb(211 47 76 / 0.2);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(to right, #b1233d, #942039);
+    box-shadow: 0 10px 25px -5px rgb(211 47 76 / 0.3);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    @apply px-6 py-3 bg-white text-gray-700 rounded-xl font-semibold
+           border border-gray-200 
+           transition-all duration-200 shadow-sm hover:shadow-md
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary:hover {
+    border-color: #f7aab3;
+    color: #d32f4c;
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    @apply px-6 py-3 text-gray-600 rounded-xl font-medium
+           hover:bg-gray-50 hover:text-gray-900 transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Input Fields */
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-xl 
+           bg-white text-gray-900 placeholder:text-gray-400
+           transition-all duration-200 outline-none;
+  }
+  .input-field:focus {
+    border-color: #d32f4c;
+    box-shadow: 0 0 0 3px rgb(211 47 76 / 0.15);
+  }
+
+  .input-field-icon {
+    @apply pl-12 pr-4;
+  }
+
+  /* Card */
+  .glamo-card {
+    @apply bg-white rounded-2xl shadow-xl shadow-gray-900/5 border border-gray-100;
+  }
+
+  /* Auth Layout */
+  .auth-container {
+    @apply min-h-screen flex;
+  }
+
+  .auth-form-side {
+    @apply flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-white;
+  }
+
+  .auth-brand-side {
+    @apply hidden lg:flex flex-1 items-center justify-center p-12 relative overflow-hidden;
+    background: linear-gradient(to bottom right, #d32f4c, #b1233d, #942039);
+  }
+
+  /* Logo */
+  .glamo-logo-icon {
+    @apply w-10 h-10 rounded-xl flex items-center justify-center;
+    background: linear-gradient(to bottom right, #e74c64, #b1233d);
+    box-shadow: 0 10px 15px -3px rgb(231 76 100 / 0.3);
+  }
+
+  .glamo-logo-text {
+    @apply text-2xl font-bold;
+    background: linear-gradient(to right, #d32f4c, #b1233d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Links */
+  .link-primary {
+    color: #d32f4c;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .link-primary:hover {
+    color: #b1233d;
+  }
+
+  /* Decorative Elements */
+  .decorative-blob {
+    @apply absolute rounded-full blur-3xl opacity-30;
+  }
+}
+
+@layer utilities {
+  /* Elegant gradient backgrounds */
+  .bg-gradient-elegant {
+    background: linear-gradient(135deg, hsl(350 70% 35%) 0%, hsl(350 80% 18%) 100%);
+  }
+
+  .bg-gradient-subtle {
+    background: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 100%) 100%);
+  }
+
+  /* Shimmer animation for loading skeletons */
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* Smooth scroll */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    @apply backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border border-white/20 dark:border-gray-700/50;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border border-gray-200/50 dark:border-gray-700/50 shadow-xl;
+  }
+
+  /* Focus visible for accessibility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ruby-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900;
+  }
+
+  /* Custom scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(0 0% 80%) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(0 0% 80%);
+    border-radius: 9999px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(0 0% 60%);
+  }
+
+  .dark .scrollbar-thin {
+    scrollbar-color: hsl(0 0% 30%) transparent;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(0 0% 30%);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(0 0% 40%);
+  }
+
+  /* Ruby shadow utilities - custom opacity variants */
+  .shadow-ruby-500\/15 {
+    --tw-shadow-color: rgb(231 76 100 / 0.15);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .shadow-ruby-500\/20 {
+    --tw-shadow-color: rgb(231 76 100 / 0.20);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .shadow-ruby-500\/25 {
+    --tw-shadow-color: rgb(231 76 100 / 0.25);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .shadow-ruby-500\/30 {
+    --tw-shadow-color: rgb(231 76 100 / 0.30);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .shadow-ruby-600\/15 {
+    --tw-shadow-color: rgb(211 47 76 / 0.15);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .shadow-ruby-600\/20 {
+    --tw-shadow-color: rgb(211 47 76 / 0.20);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .shadow-ruby-600\/25 {
+    --tw-shadow-color: rgb(211 47 76 / 0.25);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .shadow-ruby-600\/30 {
+    --tw-shadow-color: rgb(211 47 76 / 0.30);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+
+  /* Ring opacity variant */
+  .ring-ruby-500\/20 {
+    --tw-ring-color: rgb(231 76 100 / 0.20);
+  }
+
+  /* Text balance for better typography */
+  .text-balance {
+    text-wrap: balance;
+  }
+}

@@ -1,0 +1,146 @@
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException, SetMetadata } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { CaslAbilityFactory, Action, Subjects, AppAbility } from './casl-ability.factory';
+import { AuthenticatedUser } from '../interfaces';
+import { IS_PUBLIC_KEY } from '../decorators';
+
+/**
+ * Interface para definir requisito de política
+ */
+export interface PolicyRequirement {
+  action: Action;
+  subject: Subjects;
+}
+
+/**
+ * Handler abstrato para políticas customizadas
+ */
+export interface IPolicyHandler {
+  handle(ability: AppAbility, user: AuthenticatedUser): boolean;
+}
+
+/**
+ * Tipo de handler - pode ser classe ou callback
+ */
+export type PolicyHandlerCallback = (ability: AppAbility, user: AuthenticatedUser) => boolean;
+export type PolicyHandler = IPolicyHandler | PolicyHandlerCallback;
+
+/**
+ * Metadata key para políticas
+ */
+export const CHECK_POLICIES_KEY = 'check_policies';
+
+/**
+ * Decorator para definir políticas requeridas
+ */
+export const CheckPolicies = (...handlers: PolicyHandler[]) =>
+  SetMetadata(CHECK_POLICIES_KEY, handlers);
+
+/**
+ * Decorators helper para ações comuns
+ */
+export const CanCreate = (subject: Subjects) =>
+  CheckPolicies((ability: AppAbility) => ability.can('create', subject));
+
+export const CanRead = (subject: Subjects) =>
+  CheckPolicies((ability: AppAbility) => ability.can('read', subject));
+
+export const CanUpdate = (subject: Subjects) =>
+  CheckPolicies((ability: AppAbility) => ability.can('update', subject));
+
+export const CanDelete = (subject: Subjects) =>
+  CheckPolicies((ability: AppAbility) => ability.can('delete', subject));
+
+export const CanManage = (subject: Subjects) =>
+  CheckPolicies((ability: AppAbility) => ability.can('manage', subject));
+
+/**
+ * Guard para verificar políticas CASL
+ */
+@Injectable()
+export class PoliciesGuard implements CanActivate {
+  constructor(
+    private reflector: Reflector,
+    private caslAbilityFactory: CaslAbilityFactory,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    // Verifica se a rota é pública
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic) {
+      return true;
+    }
+
+    // Obtém os handlers de política
+    const policyHandlers = this.reflector.getAllAndOverride<PolicyHandler[]>(
+      CHECK_POLICIES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    // Se não há políticas, permite acesso
+    if (!policyHandlers || policyHandlers.length === 0) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const user: AuthenticatedUser = request.user;
+
+    if (!user) {
+      throw new ForbiddenException('Usuário não autenticado');
+    }
+
+    // Cria ability para o usuário
+    const ability = this.caslAbilityFactory.createForUser(user);
+
+    // Armazena ability no request para uso posterior
+    request.ability = ability;
+
+    // Verifica todas as políticas
+    const results = policyHandlers.map((handler) =>
+      this.execPolicyHandler(handler, ability, user),
+    );
+
+    const allPassed = results.every((result) => result === true);
+
+    if (!allPassed) {
+      throw new ForbiddenException('Você não tem permissão para esta ação');
+    }
+
+    return true;
+  }
+
+  /**
+   * Executa um handler de política
+   */
+  private execPolicyHandler(
+    handler: PolicyHandler,
+    ability: AppAbility,
+    user: AuthenticatedUser,
+  ): boolean {
+    if (typeof handler === 'function') {
+      return handler(ability, user);
+    }
+    return handler.handle(ability, user);
+  }
+}
+
+/**
+ * Decorator combinado: Auth + Policy Check
+ */
+export function AuthAndPolicy(action: Action, subject: Subjects) {
+  return function (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    CheckPolicies((ability: AppAbility) => ability.can(action, subject))(
+      target,
+      propertyKey,
+      descriptor,
+    );
+  };
+}

@@ -1,0 +1,49 @@
+{
+  "extends": "../../packages/config/tsconfig/nestjs.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@core/*": ["src/core/*"]
+    },
+    "strict": false,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "strictNullChecks": false,
+    "skipLibCheck": true,
+    "isolatedModules": false,
+    "noEmit": false,
+    "emitDeclarationOnly": false
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules", 
+    "dist", 
+    "test", 
+    "**/*.spec.ts", 
+    "**/*.e2e-spec.ts",
+    "src/modules/notifications/**",
+    "src/modules/professionals/**",
+    "src/modules/services/**",
+    "src/modules/analytics/**",
+    "src/modules/inventory/**",
+    "src/modules/financial/**",
+    "src/modules/marketing/**",
+    "src/modules/commissions/**",
+    "src/modules/integrations/**",
+    "src/modules/appointments/**",
+    "src/modules/customers/**",
+    "src/modules/auth/casl/**",
+    "src/modules/auth/guards/roles.guard.ts",
+    "src/modules/auth/guards/local-auth.guard.ts",
+    "src/modules/auth/guards/permissions.guard.ts",
+    "src/modules/auth/guards/tenant.guard.ts",
+    "src/modules/auth/strategies/local.strategy.ts",
+    "src/modules/auth/strategies/jwt-refresh.strategy.ts"
+  ]
+}
