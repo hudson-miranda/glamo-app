@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSidebarStore, useAuthStore } from '@/stores';
-import { Sidebar, Header } from '@/components/layout';
+import { Sidebar, Header, MobileTabBar } from '@/components/layout';
 import { cn } from '@/lib/utils';
 import { authService } from '@/services';
 
@@ -80,11 +80,15 @@ export default function DashboardLayout({
       <main
         className={cn(
           'min-h-screen pt-16 transition-all duration-300',
-          isCollapsed ? 'ml-16' : 'ml-64',
+          // Mobile: no margin, add bottom padding for tab bar
+          'ml-0 pb-24 md:pb-0',
+          // Desktop: sidebar margin
+          isCollapsed ? 'md:ml-16' : 'md:ml-64',
         )}
       >
-        <div className="p-6 lg:p-8">{children}</div>
+        <div className="p-4 md:p-6 lg:p-8">{children}</div>
       </main>
+      <MobileTabBar />
     </div>
   );
 }

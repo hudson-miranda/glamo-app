@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { 
-  Building2, 
   ChevronDown, 
   Plus, 
   Check,
@@ -32,9 +31,10 @@ interface Business {
 
 interface BusinessSwitcherProps {
   collapsed?: boolean;
+  className?: string;
 }
 
-export function BusinessSwitcher({ collapsed = false }: BusinessSwitcherProps) {
+export function BusinessSwitcher({ collapsed = false, className }: BusinessSwitcherProps) {
   const router = useRouter();
   const { tenant } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +52,7 @@ export function BusinessSwitcher({ collapsed = false }: BusinessSwitcherProps) {
 
   const currentBusiness = businesses.find(b => b.id === tenant?.id) || businesses[0];
 
-  const handleSelectBusiness = (business: Business) => {
+  const handleSelectBusiness = (_business: Business) => {
     // TODO: Implementar troca de negócio via API
     // Por enquanto, apenas fecha o dropdown
     setIsOpen(false);
@@ -68,49 +68,52 @@ export function BusinessSwitcher({ collapsed = false }: BusinessSwitcherProps) {
 
   if (collapsed) {
     return (
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger asChild>
-          <button 
-            className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold shadow-lg shadow-ruby-500/25 hover:shadow-xl hover:shadow-ruby-500/30 transition-all"
-            title={currentBusiness?.name || 'Selecionar Negócio'}
+      <div className={className}>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+          <DropdownMenuTrigger asChild>
+            <button 
+              className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold shadow-lg shadow-ruby-500/25 hover:shadow-xl hover:shadow-ruby-500/30 transition-all"
+              title={currentBusiness?.name || 'Selecionar Negócio'}
+            >
+              {currentBusiness?.logo ? (
+                <img 
+                  src={currentBusiness.logo} 
+                  alt={currentBusiness.name} 
+                  className="h-full w-full rounded-xl object-cover"
+                />
+              ) : (
+                <span className="text-sm">
+                  {currentBusiness?.name ? getInitials(currentBusiness.name) : 'N'}
+                </span>
+              )}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent 
+            className="w-64" 
+            side="right" 
+            align="start"
+            sideOffset={12}
           >
-            {currentBusiness?.logo ? (
-              <img 
-                src={currentBusiness.logo} 
-                alt={currentBusiness.name} 
-                className="h-full w-full rounded-xl object-cover"
-              />
-            ) : (
-              <span className="text-sm">
-                {currentBusiness?.name ? getInitials(currentBusiness.name) : 'N'}
-              </span>
-            )}
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent 
-          className="w-64" 
-          side="right" 
-          align="start"
-          sideOffset={12}
-        >
-          <BusinessDropdownContent 
-            businesses={businesses}
-            currentBusiness={currentBusiness}
-            onSelect={handleSelectBusiness}
-            onCreate={handleCreateBusiness}
-            onSettings={handleBusinessSettings}
-          />
-        </DropdownMenuContent>
+            <BusinessDropdownContent 
+              businesses={businesses}
+              currentBusiness={currentBusiness}
+              onSelect={handleSelectBusiness}
+              onCreate={handleCreateBusiness}
+              onSettings={handleBusinessSettings}
+            />
+          </DropdownMenuContent>
       </DropdownMenu>
+      </div>
     );
   }
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
-        <button 
-          className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-all group"
-        >
+    <div className={className}>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger asChild>
+          <button 
+            className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-all group"
+          >
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold shadow-md flex-shrink-0">
             {currentBusiness?.logo ? (
               <img 
@@ -152,6 +155,7 @@ export function BusinessSwitcher({ collapsed = false }: BusinessSwitcherProps) {
         />
       </DropdownMenuContent>
     </DropdownMenu>
+    </div>
   );
 }
 

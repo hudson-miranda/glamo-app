@@ -13,13 +13,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Bell, Menu, LogOut, User, Settings } from 'lucide-react';
+import { Bell, LogOut, User, Settings } from 'lucide-react';
 import { authService } from '@/services';
 import { useRouter } from 'next/navigation';
 
 export function Header() {
-  const { user, tenant, logout } = useAuthStore();
-  const { isCollapsed, toggle } = useSidebarStore();
+  const { user, logout } = useAuthStore();
+  const { isCollapsed } = useSidebarStore();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -35,15 +35,24 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-6 transition-all duration-300',
-        isCollapsed ? 'left-16' : 'left-64',
+        'fixed right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-4 md:px-6 transition-all duration-300',
+        // Mobile: full width
+        'left-0',
+        // Desktop: respect sidebar
+        isCollapsed ? 'md:left-16' : 'md:left-64',
       )}
     >
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={toggle} className="md:hidden">
-          <Menu className="h-5 w-5" />
-        </Button>
-        {/* Espaço para breadcrumb ou título de página */}
+        {/* Mobile Logo */}
+        <div className="md:hidden flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-ruby-500 to-ruby-700 text-white font-bold shadow-md text-sm">
+            G
+          </div>
+          <span className="text-lg font-bold bg-gradient-to-r from-ruby-600 to-ruby-700 bg-clip-text text-transparent">
+            Glamo
+          </span>
+        </div>
+        {/* Desktop Title */}
         <div className="hidden md:block">
           <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Dashboard</h1>
         </div>
