@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { 
   UserCog, 
   Plus, 
@@ -13,11 +14,20 @@ import {
   Star,
   Phone,
   Mail,
-  Briefcase
+  Briefcase,
+  Users,
+  TrendingUp
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent,
+  StaggerContainer, 
+  StaggerItem,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 
 // Mock data for professionals
 const professionals = [
@@ -104,12 +114,18 @@ function getInitials(name: string) {
 
 export default function ProfessionalsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const stats = [
-    { label: 'Total', value: professionals.length },
-    { label: 'Ativos', value: professionals.filter(p => p.active).length },
-    { label: 'Atendimentos Hoje', value: professionals.reduce((acc, p) => acc + p.appointmentsToday, 0) },
-    { label: 'Média Avaliação', value: '4.8' },
+    { label: 'Total', value: professionals.length.toString(), icon: Users, bg: 'bg-blue-50 dark:bg-blue-950/50', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Ativos', value: professionals.filter(p => p.active).length.toString(), icon: UserCog, bg: 'bg-emerald-50 dark:bg-emerald-950/50', color: 'text-emerald-600 dark:text-emerald-400' },
+    { label: 'Atendimentos Hoje', value: professionals.reduce((acc, p) => acc + p.appointmentsToday, 0).toString(), icon: Calendar, bg: 'bg-violet-50 dark:bg-violet-950/50', color: 'text-violet-600 dark:text-violet-400' },
+    { label: 'Média Avaliação', value: '4.8', icon: Star, bg: 'bg-amber-50 dark:bg-amber-950/50', color: 'text-amber-600 dark:text-amber-400' },
   ];
 
   const filteredProfessionals = professionals.filter(professional => 
@@ -117,86 +133,148 @@ export default function ProfessionalsPage() {
     professional.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-40" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+          <Skeleton className="h-11 w-44 rounded-xl" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+        <Skeleton className="h-12 w-full rounded-2xl" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <SkeletonCard key={i} className="h-64" />
+          ))}
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Profissionais</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <UserCog className="w-7 h-7 text-ruby-500" />
+            Profissionais
+          </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             Gerencie sua equipe de profissionais
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2 rounded-xl bg-gradient-to-r from-ruby-600 to-ruby-700 hover:shadow-lg hover:shadow-ruby-500/25 transition-all">
           <Plus className="h-4 w-4" />
           Novo Profissional
         </Button>
-      </div>
+      </motion.div>
 
       {/* Stats */}
       <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
           <StaggerItem key={stat.label}>
-            <Card>
-              <CardContent className="p-4">
-                <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-              </CardContent>
-            </Card>
+            <AnimatedCard>
+              <Card className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-900">
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2.5 rounded-xl ${stat.bg}`}>
+                      <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </AnimatedCard>
           </StaggerItem>
         ))}
       </StaggerContainer>
 
       {/* Search and Filter */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="flex flex-col sm:flex-row gap-4"
+      >
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Buscar por nome ou função..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-ruby-500 focus:border-transparent"
+            className="w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-ruby-500/50 focus:border-ruby-500 transition-all"
           />
         </div>
-        <Button variant="outline" className="gap-2">
+        <Button variant="outline" className="gap-2 rounded-2xl px-5">
           <Filter className="h-4 w-4" />
           Filtros
         </Button>
-      </div>
+      </motion.div>
 
       {/* Professionals Grid */}
-      <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredProfessionals.map((professional) => (
-          <StaggerItem key={professional.id}>
-            <motion.div
-              whileHover={{ scale: 1.02, y: -4 }}
-              className={`bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 hover:shadow-xl transition-all ${!professional.active && 'opacity-60'}`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold text-lg">
-                    {getInitials(professional.name)}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredProfessionals.map((professional) => (
+            <StaggerItem key={professional.id}>
+              <AnimatedCard>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  className={`bg-white dark:bg-gray-900 rounded-2xl border-0 shadow-sm p-5 hover:shadow-xl transition-all ${!professional.active && 'opacity-60'}`}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold text-lg">
+                        {getInitials(professional.name)}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{professional.name}</h3>
+                        <p className="text-sm text-ruby-600 dark:text-ruby-400">{professional.role}</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">{professional.name}</h3>
-                    <p className="text-sm text-ruby-600 dark:text-ruby-400">{professional.role}</p>
+
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                      <span className="font-semibold text-gray-900 dark:text-white">{professional.rating}</span>
+                    </div>
+                    <span className="text-sm text-gray-400">({professional.reviews} avaliações)</span>
                   </div>
-                </div>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </div>
 
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <span className="font-semibold text-gray-900 dark:text-white">{professional.rating}</span>
-                </div>
-                <span className="text-sm text-gray-400">({professional.reviews} avaliações)</span>
-              </div>
-
-              <div className="space-y-2 text-sm mb-4">
+                  <div className="space-y-2 text-sm mb-4">
                 <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                   <Clock className="h-4 w-4" />
                   {professional.schedule}
@@ -227,24 +305,26 @@ export default function ProfessionalsPage() {
 
               <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
                     <Phone className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600">
                     <Mail className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-600">
                     <Calendar className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="rounded-xl">
                   Ver Agenda
                 </Button>
               </div>
-            </motion.div>
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
-    </div>
+                </motion.div>
+              </AnimatedCard>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </motion.div>
+    </motion.div>
   );
 }

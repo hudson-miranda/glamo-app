@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Package, 
@@ -11,11 +12,22 @@ import {
   TrendingUp,
   MoreVertical,
   Edit,
-  Trash2
+  Trash2,
+  Boxes,
+  DollarSign,
+  Tag
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent,
+  StaggerContainer, 
+  StaggerItem,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+  SkeletonList,
+} from '@/components/ui';
 
 // Mock data for inventory
 const products = [
@@ -88,31 +100,76 @@ const products = [
 ];
 
 export default function InventoryPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   const lowStockProducts = products.filter(p => p.stock <= p.minStock);
   const totalValue = products.reduce((acc, p) => acc + (p.stock * p.cost), 0);
 
   const stats = [
-    { label: 'Total Produtos', value: products.length },
-    { label: 'Estoque Baixo', value: lowStockProducts.length, alert: lowStockProducts.length > 0 },
-    { label: 'Valor em Estoque', value: `R$ ${totalValue.toFixed(2)}` },
-    { label: 'Categorias', value: [...new Set(products.map(p => p.category))].length },
+    { label: 'Total Produtos', value: products.length.toString(), icon: Package, bg: 'bg-blue-50 dark:bg-blue-950/50', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Estoque Baixo', value: lowStockProducts.length.toString(), icon: AlertTriangle, bg: lowStockProducts.length > 0 ? 'bg-amber-50 dark:bg-amber-950/50' : 'bg-emerald-50 dark:bg-emerald-950/50', color: lowStockProducts.length > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400' },
+    { label: 'Valor em Estoque', value: `R$ ${totalValue.toFixed(2)}`, icon: DollarSign, bg: 'bg-emerald-50 dark:bg-emerald-950/50', color: 'text-emerald-600 dark:text-emerald-400' },
+    { label: 'Categorias', value: [...new Set(products.map(p => p.category))].length.toString(), icon: Tag, bg: 'bg-violet-50 dark:bg-violet-950/50', color: 'text-violet-600 dark:text-violet-400' },
   ];
 
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+          <Skeleton className="h-11 w-40 rounded-xl" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+        <Skeleton className="h-12 w-full rounded-2xl" />
+        <SkeletonList rows={6} />
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Estoque</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <Package className="w-7 h-7 text-ruby-500" />
+            Estoque
+          </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             Controle de produtos e materiais
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2 rounded-xl bg-gradient-to-r from-ruby-600 to-ruby-700 hover:shadow-lg hover:shadow-ruby-500/25 transition-all">
           <Plus className="h-4 w-4" />
           Novo Produto
         </Button>
-      </div>
+      </motion.div>
 
       {/* Alert for low stock */}
       {lowStockProducts.length > 0 && (
@@ -140,12 +197,17 @@ export default function InventoryPage() {
       <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
           <StaggerItem key={stat.label}>
-            <Card className={stat.alert ? 'border-amber-300 dark:border-amber-700' : ''}>
+            <Card className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-900">
               <CardContent className="p-4">
-                <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-                <p className={`text-2xl font-bold ${stat.alert ? 'text-amber-600' : 'text-gray-900 dark:text-white'}`}>
-                  {stat.value}
-                </p>
+                <div className="flex items-center gap-3">
+                  <div className={`h-10 w-10 rounded-xl ${stat.bg} flex items-center justify-center`}>
+                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+                    <p className="text-xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </StaggerItem>
@@ -237,6 +299,6 @@ export default function InventoryPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

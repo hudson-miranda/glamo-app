@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, 
@@ -15,9 +15,16 @@ import {
   Shield
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 import { useAuthStore } from '@/stores';
 
 export default function AccountSettingsPage() {

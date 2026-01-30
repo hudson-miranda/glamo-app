@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Clock, 
@@ -11,9 +11,16 @@ import {
   Copy
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 
 const daysOfWeek = [
   { key: 'monday', label: 'Segunda-feira' },
@@ -44,8 +51,14 @@ const defaultSchedule: Schedule = {
 
 export default function ScheduleSettingsPage() {
   const router = useRouter();
+  const [pageLoading, setPageLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [schedule, setSchedule] = useState<Schedule>(defaultSchedule);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleDay = (dayKey: string) => {
     setSchedule(prev => ({
@@ -112,6 +125,26 @@ export default function ScheduleSettingsPage() {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsLoading(false);
   };
+
+  if (pageLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10 rounded-lg" />
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-56" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+        </div>
+        <SkeletonCard className="h-96" />
+        <SkeletonCard className="h-24" />
+      </motion.div>
+    );
+  }
 
   return (
     <div className="space-y-6">

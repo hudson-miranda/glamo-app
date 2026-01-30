@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   DollarSign, 
@@ -19,9 +19,18 @@ import {
   Receipt,
   RefreshCw
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  StaggerContainer, 
+  StaggerItem, 
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 
 // Mock data
@@ -146,6 +155,12 @@ const statusLabels = {
 
 export default function TransactionsPage() {
   const [filter, setFilter] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
   
   const stats = [
     { 
@@ -185,6 +200,32 @@ export default function TransactionsPage() {
   const filteredTransactions = filter === 'all' 
     ? transactions 
     : transactions.filter(t => t.type === filter);
+
+  if (isLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-40" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-10 w-28" />
+            <Skeleton className="h-10 w-36" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => <SkeletonCard key={i} className="h-24" />)}
+        </div>
+        <SkeletonCard className="h-16" />
+        <SkeletonCard className="h-96" />
+      </motion.div>
+    );
+  }
 
   return (
     <div className="space-y-6">

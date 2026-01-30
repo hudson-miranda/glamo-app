@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   CreditCard, 
@@ -16,9 +16,16 @@ import {
   Clock
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 
 const plans = [
   {
@@ -95,6 +102,37 @@ const usage = [
 
 export default function SubscriptionSettingsPage() {
   const router = useRouter();
+  const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (pageLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10 rounded-lg" />
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-48" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+        </div>
+        <SkeletonCard className="h-32" />
+        <SkeletonCard className="h-48" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SkeletonCard className="h-80" />
+          <SkeletonCard className="h-80" />
+          <SkeletonCard className="h-80" />
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <div className="space-y-6">

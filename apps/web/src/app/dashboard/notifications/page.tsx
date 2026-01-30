@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Bell, 
@@ -16,9 +16,17 @@ import {
   Trash2,
   CheckCheck
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  StaggerContainer, 
+  StaggerItem,
+  Skeleton,
+  SkeletonList,
+} from '@/components/ui';
 
 // Mock data
 const notifications = [
@@ -90,6 +98,12 @@ const typeColors = {
 export default function NotificationsPage() {
   const [notificationList, setNotificationList] = useState(notifications);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const unreadCount = notificationList.filter(n => !n.read).length;
 
@@ -113,19 +127,55 @@ export default function NotificationsPage() {
     setNotificationList(prev => prev.filter(n => n.id !== id));
   };
 
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-36" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+          <Skeleton className="h-11 w-48 rounded-xl" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-10 w-24 rounded-xl" />
+          <Skeleton className="h-10 w-32 rounded-xl" />
+        </div>
+        <SkeletonList rows={6} />
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Notificações</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <Bell className="w-7 h-7 text-ruby-500" />
+            Notificações
+          </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             {unreadCount > 0 ? `${unreadCount} notificação(ões) não lida(s)` : 'Todas as notificações lidas'}
           </p>
         </div>
         <div className="flex items-center gap-2">
           {unreadCount > 0 && (
-            <Button variant="outline" onClick={markAllAsRead} className="gap-2">
+            <Button variant="outline" onClick={markAllAsRead} className="gap-2 rounded-xl">
               <CheckCheck className="h-4 w-4" />
               Marcar todas como lidas
             </Button>
@@ -134,7 +184,7 @@ export default function NotificationsPage() {
             <Settings className="h-5 w-5" />
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Filter */}
       <div className="flex gap-2">
@@ -233,6 +283,6 @@ export default function NotificationsPage() {
           </AnimatePresence>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   HelpCircle, 
@@ -19,9 +20,19 @@ import {
   Calendar,
   DollarSign
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  StaggerContainer, 
+  StaggerItem, 
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+  SkeletonList,
+} from '@/components/ui';
 
 const faqs = [
   {
@@ -94,8 +105,43 @@ const videos = [
 ];
 
 export default function HelpPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="text-center max-w-2xl mx-auto">
+          <Skeleton className="h-16 w-16 rounded-2xl mx-auto mb-4" />
+          <Skeleton className="h-8 w-48 mx-auto" />
+          <Skeleton className="h-4 w-64 mx-auto mt-2" />
+        </div>
+        <Skeleton className="h-12 w-full max-w-md mx-auto rounded-2xl" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+        <SkeletonList rows={6} />
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -252,6 +298,6 @@ export default function HelpPage() {
           </AnimatedCard>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

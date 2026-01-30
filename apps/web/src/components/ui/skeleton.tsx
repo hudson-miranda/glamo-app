@@ -108,4 +108,117 @@ function SkeletonProfile() {
   )
 }
 
-export { Skeleton, SkeletonCard, SkeletonTable, SkeletonDashboard, SkeletonProfile }
+function SkeletonStats({ count = 4 }: { count?: number }) {
+  return (
+    <div className={cn("grid gap-4", count === 4 ? "md:grid-cols-2 lg:grid-cols-4" : count === 3 ? "md:grid-cols-3" : "md:grid-cols-2")}>
+      {Array.from({ length: count }).map((_, i) => (
+        <SkeletonCard key={i} />
+      ))}
+    </div>
+  )
+}
+
+function SkeletonList({ rows = 5 }: { rows?: number }) {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+          <Skeleton className="w-12 h-12 rounded-xl" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-28" />
+          </div>
+          <Skeleton className="h-9 w-24 rounded-xl" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function SkeletonForm({ fields = 4 }: { fields?: number }) {
+  return (
+    <div className="space-y-6 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+      <div className="space-y-2">
+        <Skeleton className="h-7 w-48" />
+        <Skeleton className="h-4 w-64" />
+      </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        {Array.from({ length: fields }).map((_, i) => (
+          <div key={i} className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-11 w-full rounded-xl" />
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-end gap-3 pt-4">
+        <Skeleton className="h-11 w-28 rounded-xl" />
+        <Skeleton className="h-11 w-28 rounded-xl" />
+      </div>
+    </div>
+  )
+}
+
+function SkeletonPage() {
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+        <Skeleton className="h-11 w-40 rounded-xl" />
+      </div>
+      
+      {/* Stats */}
+      <SkeletonStats count={4} />
+      
+      {/* Content */}
+      <SkeletonTable rows={5} />
+    </div>
+  )
+}
+
+function SkeletonSettings() {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-64" />
+      </div>
+      
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-6">
+          <SkeletonForm fields={6} />
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="p-4 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+              <div className="flex items-center gap-3 mb-3">
+                <Skeleton className="w-10 h-10 rounded-xl" />
+                <div className="space-y-1.5">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+              </div>
+              <Skeleton className="h-3 w-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export { 
+  Skeleton, 
+  SkeletonCard, 
+  SkeletonTable, 
+  SkeletonDashboard, 
+  SkeletonProfile,
+  SkeletonStats,
+  SkeletonList,
+  SkeletonForm,
+  SkeletonPage,
+  SkeletonSettings
+}

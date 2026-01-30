@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Gift, 
@@ -15,9 +16,18 @@ import {
   Clock,
   MoreVertical
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  StaggerContainer, 
+  StaggerItem, 
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 
 // Mock data
 const loyaltyPrograms = [
@@ -75,12 +85,44 @@ const tierColors = {
 };
 
 export default function LoyaltyPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   const stats = [
-    { label: 'Total de Membros', value: 479, icon: Users },
-    { label: 'Pontos em Circulação', value: '46.5K', icon: Star },
-    { label: 'Resgates do Mês', value: 168, icon: Gift },
-    { label: 'Taxa de Retenção', value: '87%', icon: TrendingUp },
+    { label: 'Total de Membros', value: 479, icon: Users, bg: 'bg-blue-50 dark:bg-blue-950/50', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Pontos em Circulação', value: '46.5K', icon: Star, bg: 'bg-amber-50 dark:bg-amber-950/50', color: 'text-amber-600 dark:text-amber-400' },
+    { label: 'Resgates do Mês', value: 168, icon: Gift, bg: 'bg-ruby-50 dark:bg-ruby-950/50', color: 'text-ruby-600 dark:text-ruby-400' },
+    { label: 'Taxa de Retenção', value: '87%', icon: TrendingUp, bg: 'bg-emerald-50 dark:bg-emerald-950/50', color: 'text-emerald-600 dark:text-emerald-400' },
   ];
+
+  if (isLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-56" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+          <Skeleton className="h-10 w-40" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => <SkeletonCard key={i} className="h-24" />)}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <SkeletonCard className="h-64" />
+          <SkeletonCard className="h-64" />
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <div className="space-y-6">

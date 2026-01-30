@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -20,9 +20,16 @@ import {
   Check,
   Percent
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 
 // Mock data
@@ -56,12 +63,18 @@ interface CartItem {
 
 export default function NewSalePage() {
   const router = useRouter();
+  const [pageLoading, setPageLoading] = useState(true);
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [discount, setDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'services' | 'products'>('services');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const addToCart = (item: { id: string; name: string; price: number; type: string }) => {
     const existing = cart.find(i => i.id === item.id);
@@ -107,6 +120,32 @@ export default function NewSalePage() {
     { id: 'pix', name: 'PIX', icon: QrCode },
     { id: 'cash', name: 'Dinheiro', icon: Banknote },
   ];
+
+  if (pageLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10 rounded-lg" />
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-40" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <SkeletonCard className="h-14" />
+            <SkeletonCard className="h-10" />
+            <SkeletonCard className="h-64" />
+          </div>
+          <SkeletonCard className="h-96" />
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -226,7 +265,7 @@ export default function NewSalePage() {
                   >
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">{item.name}</p>
-                      {'stock' in item && (
+                      {'stock' in item && typeof item.stock === 'number' && (
                         <p className="text-xs text-gray-500">{item.stock} em estoque</p>
                       )}
                     </div>

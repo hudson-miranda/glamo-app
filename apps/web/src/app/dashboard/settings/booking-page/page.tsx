@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Globe, 
@@ -15,14 +15,22 @@ import {
   Layout
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 import { useAuthStore } from '@/stores';
 
 export default function BookingPageSettingsPage() {
   const router = useRouter();
   const { tenant } = useAuthStore();
+  const [pageLoading, setPageLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const bookingUrl = `https://glamo.app/${tenant?.slug || 'meunegocio'}`;
@@ -39,6 +47,11 @@ export default function BookingPageSettingsPage() {
     requireEmail: false,
     allowNotes: true,
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -60,6 +73,27 @@ export default function BookingPageSettingsPage() {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsLoading(false);
   };
+
+  if (pageLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10 rounded-lg" />
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-56" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+        </div>
+        <SkeletonCard className="h-20" />
+        <SkeletonCard className="h-48" />
+        <SkeletonCard className="h-64" />
+      </motion.div>
+    );
+  }
 
   return (
     <div className="space-y-6">

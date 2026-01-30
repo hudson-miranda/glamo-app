@@ -3,7 +3,7 @@ export type { ButtonProps } from './button';
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card';
 
-export { Skeleton, SkeletonCard, SkeletonTable, SkeletonDashboard, SkeletonProfile } from './skeleton';
+export { Skeleton, SkeletonCard, SkeletonTable, SkeletonDashboard, SkeletonProfile, SkeletonStats, SkeletonList, SkeletonForm, SkeletonPage, SkeletonSettings } from './skeleton';
 
 export { Avatar, AvatarImage, AvatarFallback } from './avatar';
 

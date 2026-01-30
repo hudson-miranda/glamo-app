@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { 
   Wallet, 
   TrendingUp, 
@@ -14,9 +16,19 @@ import {
   Calendar,
   Filter
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  StaggerContainer, 
+  StaggerItem, 
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+  SkeletonList,
+} from '@/components/ui';
 
 // Mock data
 const stats = [
@@ -67,73 +79,136 @@ const paymentMethods = [
 ];
 
 export default function FinancialPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-11 w-36 rounded-xl" />
+            <Skeleton className="h-11 w-40 rounded-xl" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <SkeletonList rows={6} />
+          </div>
+          <SkeletonCard className="h-80" />
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Financeiro</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <Wallet className="w-7 h-7 text-ruby-500" />
+            Financeiro
+          </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             Acompanhe as finanças do seu negócio
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 rounded-xl">
             <Calendar className="h-4 w-4" />
             Janeiro 2026
           </Button>
-          <Button className="gap-2">
-            <DollarSign className="h-4 w-4" />
-            Nova Transação
-          </Button>
+          <Link href="/dashboard/financial/transactions">
+            <Button className="gap-2 rounded-xl bg-gradient-to-r from-ruby-600 to-ruby-700 hover:shadow-lg hover:shadow-ruby-500/25 transition-all">
+              <DollarSign className="h-4 w-4" />
+              Nova Transação
+            </Button>
+          </Link>
         </div>
-      </div>
+      </motion.div>
 
       {/* Stats */}
       <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
           <StaggerItem key={stat.label}>
-            <AnimatedCard className="p-5">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stat.value}</p>
-                  <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
-                    stat.trend === 'up' ? 'text-emerald-600' : 'text-red-600'
-                  }`}>
-                    {stat.trend === 'up' ? (
-                      <ArrowUpRight className="h-4 w-4" />
-                    ) : (
-                      <ArrowDownRight className="h-4 w-4" />
-                    )}
-                    {stat.change}
-                    <span className="text-gray-400 font-normal">vs mês anterior</span>
+            <AnimatedCard>
+              <Card className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-900">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stat.value}</p>
+                      <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
+                        stat.trend === 'up' ? 'text-emerald-600' : 'text-red-600'
+                      }`}>
+                        {stat.trend === 'up' ? (
+                          <ArrowUpRight className="h-4 w-4" />
+                        ) : (
+                          <ArrowDownRight className="h-4 w-4" />
+                        )}
+                        {stat.change}
+                        <span className="text-gray-400 font-normal">vs mês anterior</span>
+                      </div>
+                    </div>
+                    <div className={`p-3 rounded-xl ${
+                      stat.trend === 'up' 
+                        ? 'bg-emerald-100 dark:bg-emerald-900/30' 
+                        : 'bg-red-100 dark:bg-red-900/30'
+                    }`}>
+                      <stat.icon className={`h-5 w-5 ${
+                        stat.trend === 'up' 
+                          ? 'text-emerald-600 dark:text-emerald-400' 
+                          : 'text-red-600 dark:text-red-400'
+                      }`} />
+                    </div>
                   </div>
-                </div>
-                <div className={`p-3 rounded-xl ${
-                  stat.trend === 'up' 
-                    ? 'bg-emerald-100 dark:bg-emerald-900/30' 
-                    : 'bg-red-100 dark:bg-red-900/30'
-                }`}>
-                  <stat.icon className={`h-5 w-5 ${
-                    stat.trend === 'up' 
-                      ? 'text-emerald-600 dark:text-emerald-400' 
-                      : 'text-red-600 dark:text-red-400'
-                  }`} />
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </AnimatedCard>
           </StaggerItem>
         ))}
       </StaggerContainer>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+      >
         {/* Recent Transactions */}
         <div className="lg:col-span-2">
-          <Card>
+          <Card className="border-0 shadow-sm bg-white dark:bg-gray-900">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Transações Recentes</CardTitle>
-              <Button variant="ghost" size="sm" className="gap-2">
+              <Button variant="ghost" size="sm" className="gap-2 rounded-xl">
                 <Filter className="h-4 w-4" />
                 Filtrar
               </Button>
@@ -173,7 +248,7 @@ export default function FinancialPage() {
                   </motion.div>
                 ))}
               </div>
-              <Button variant="ghost" className="w-full mt-4">
+              <Button variant="ghost" className="w-full mt-4 rounded-xl">
                 Ver todas as transações
               </Button>
             </CardContent>
@@ -182,7 +257,7 @@ export default function FinancialPage() {
 
         {/* Payment Methods */}
         <div>
-          <Card>
+          <Card className="border-0 shadow-sm bg-white dark:bg-gray-900">
             <CardHeader>
               <CardTitle>Formas de Pagamento</CardTitle>
             </CardHeader>
@@ -208,7 +283,7 @@ export default function FinancialPage() {
                 ))}
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+              <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500 dark:text-gray-400">Total Recebido</span>
                   <span className="text-lg font-bold text-gray-900 dark:text-white">
@@ -219,7 +294,7 @@ export default function FinancialPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

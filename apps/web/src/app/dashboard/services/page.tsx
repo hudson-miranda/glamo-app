@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { 
   Scissors, 
   Plus, 
@@ -14,11 +15,20 @@ import {
   Trash2,
   Eye,
   EyeOff,
-  Star
+  Star,
+  Package,
+  TrendingUp
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent,
+  StaggerContainer, 
+  StaggerItem,
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 
 // Mock data for services
 const services = [
@@ -117,12 +127,18 @@ const categories = ['Todos', 'Cabelo', 'Químicos', 'Unhas', 'Barbearia', 'Trata
 export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todos');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const stats = [
-    { label: 'Total de Serviços', value: services.length },
-    { label: 'Serviços Ativos', value: services.filter(s => s.active).length },
-    { label: 'Mais Popular', value: 'Corte Masc.' },
-    { label: 'Ticket Médio', value: 'R$ 98' },
+    { label: 'Total de Serviços', value: services.length.toString(), icon: Package, bg: 'bg-blue-50 dark:bg-blue-950/50', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Serviços Ativos', value: services.filter(s => s.active).length.toString(), icon: Eye, bg: 'bg-emerald-50 dark:bg-emerald-950/50', color: 'text-emerald-600 dark:text-emerald-400' },
+    { label: 'Mais Popular', value: 'Corte Masc.', icon: Star, bg: 'bg-amber-50 dark:bg-amber-950/50', color: 'text-amber-600 dark:text-amber-400' },
+    { label: 'Ticket Médio', value: 'R$ 98', icon: TrendingUp, bg: 'bg-ruby-50 dark:bg-ruby-950/50', color: 'text-ruby-600 dark:text-ruby-400' },
   ];
 
   const filteredServices = services.filter(service => {
@@ -131,90 +147,160 @@ export default function ServicesPage() {
     return matchesSearch && matchesCategory;
   });
 
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+          <Skeleton className="h-11 w-36 rounded-xl" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+        <div className="flex gap-2">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} className="h-9 w-24 rounded-xl" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Serviços</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <Scissors className="w-7 h-7 text-ruby-500" />
+            Serviços
+          </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             Gerencie os serviços oferecidos pelo seu negócio
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2 rounded-xl bg-gradient-to-r from-ruby-600 to-ruby-700 hover:shadow-lg hover:shadow-ruby-500/25 transition-all">
           <Plus className="h-4 w-4" />
           Novo Serviço
         </Button>
-      </div>
+      </motion.div>
 
       {/* Stats */}
       <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
           <StaggerItem key={stat.label}>
-            <Card>
-              <CardContent className="p-4">
-                <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-              </CardContent>
-            </Card>
+            <AnimatedCard>
+              <Card className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-900">
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2.5 rounded-xl ${stat.bg}`}>
+                      <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </AnimatedCard>
           </StaggerItem>
         ))}
       </StaggerContainer>
 
       {/* Categories */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin"
+      >
         {categories.map((category) => (
           <Button
             key={category}
             variant={selectedCategory === category ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedCategory(category)}
-            className="flex-shrink-0"
+            className={`flex-shrink-0 rounded-xl ${selectedCategory === category ? 'bg-gradient-to-r from-ruby-600 to-ruby-700' : ''}`}
           >
             {category}
           </Button>
         ))}
-      </div>
+      </motion.div>
 
       {/* Search and Filter */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35 }}
+        className="flex flex-col sm:flex-row gap-4"
+      >
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Buscar serviço..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-ruby-500 focus:border-transparent"
+            className="w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-ruby-500/50 focus:border-ruby-500 transition-all"
           />
         </div>
-        <Button variant="outline" className="gap-2">
+        <Button variant="outline" className="gap-2 rounded-2xl px-5">
           <Filter className="h-4 w-4" />
           Filtros
         </Button>
-      </div>
+      </motion.div>
 
       {/* Services Grid */}
-      <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredServices.map((service) => (
-          <StaggerItem key={service.id}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredServices.map((service) => (
+            <StaggerItem key={service.id}>
             <motion.div
               whileHover={{ scale: 1.02, y: -4 }}
-              className={`bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 hover:shadow-xl transition-all ${!service.active && 'opacity-60'}`}
+              className={`bg-white dark:bg-gray-900 rounded-2xl border-0 shadow-sm p-5 hover:shadow-xl transition-all ${!service.active && 'opacity-60'}`}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-ruby-100 dark:bg-ruby-900/30">
+                  <div className="p-2.5 rounded-xl bg-ruby-100 dark:bg-ruby-900/30">
                     <Scissors className="h-5 w-5 text-ruby-600 dark:text-ruby-400" />
                   </div>
                   {service.popular && (
-                    <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full text-xs font-medium">
+                    <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-medium">
                       <Star className="h-3 w-3 fill-current" />
                       Popular
                     </span>
                   )}
                 </div>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </div>
@@ -244,10 +330,10 @@ export default function ServicesPage() {
                   {service.active ? 'Ativo' : 'Inativo'}
                 </span>
                 <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -255,7 +341,8 @@ export default function ServicesPage() {
             </motion.div>
           </StaggerItem>
         ))}
-      </StaggerContainer>
-    </div>
+        </StaggerContainer>
+      </motion.div>
+    </motion.div>
   );
 }

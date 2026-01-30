@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { 
@@ -15,8 +16,14 @@ import {
   ChevronRight,
   LogOut
 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem } from '@/components/ui/page-transition';
+import { 
+  Card, 
+  CardContent,
+  StaggerContainer, 
+  StaggerItem,
+  Skeleton,
+  SkeletonCard,
+} from '@/components/ui';
 
 const settingsGroups = [
   {
@@ -96,15 +103,57 @@ const settingsGroups = [
 ];
 
 export default function SettingsPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <div className="space-y-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i}>
+              <Skeleton className="h-4 w-24 mb-3" />
+              <SkeletonCard className="h-32" />
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Configurações</h1>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+          <Settings className="w-7 h-7 text-ruby-500" />
+          Configurações
+        </h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">
           Gerencie as configurações da sua conta e negócio
         </p>
-      </div>
+      </motion.div>
 
       {/* Settings Groups */}
       <StaggerContainer className="space-y-8">
@@ -114,7 +163,7 @@ export default function SettingsPage() {
               <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-1">
                 {group.title}
               </h2>
-              <Card>
+              <Card className="border-0 shadow-sm bg-white dark:bg-gray-900">
                 <CardContent className="p-0 divide-y divide-gray-100 dark:divide-gray-800">
                   {group.items.map((item) => (
                     <Link key={item.name} href={item.href}>
@@ -141,15 +190,20 @@ export default function SettingsPage() {
       </StaggerContainer>
 
       {/* Danger Zone */}
-      <div className="pt-6 border-t border-gray-200 dark:border-gray-800">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="pt-6 border-t border-gray-200 dark:border-gray-800"
+      >
         <h2 className="text-sm font-semibold text-red-500 uppercase tracking-wider mb-3 px-1">
           Zona de Perigo
         </h2>
-        <Card className="border-red-200 dark:border-red-900/50">
+        <Card className="border-0 shadow-sm bg-white dark:bg-gray-900 border-red-200 dark:border-red-900/50">
           <CardContent className="p-0">
             <motion.button
               whileHover={{ x: 4 }}
-              className="flex items-center gap-4 p-4 w-full text-left hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+              className="flex items-center gap-4 p-4 w-full text-left hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors rounded-2xl"
             >
               <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-900/30">
                 <LogOut className="h-5 w-5 text-red-600 dark:text-red-400" />
@@ -162,7 +216,7 @@ export default function SettingsPage() {
             </motion.button>
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

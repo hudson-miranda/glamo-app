@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   BarChart3, 
@@ -12,9 +13,19 @@ import {
   Filter,
   ChevronDown
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/page-transition';
+import { 
+  Button,
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  StaggerContainer, 
+  StaggerItem, 
+  AnimatedCard,
+  Skeleton,
+  SkeletonCard,
+  SkeletonList,
+} from '@/components/ui';
 
 // Mock data
 const stats = [
@@ -50,83 +61,143 @@ const revenueByDay = [
 ];
 
 export default function ReportsPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const maxRevenue = Math.max(...revenueByDay.map(d => d.value));
 
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-11 w-36 rounded-xl" />
+            <Skeleton className="h-11 w-32 rounded-xl" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+        <SkeletonCard className="h-64" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <SkeletonList rows={5} />
+          <SkeletonList rows={4} />
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Relatórios</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <BarChart3 className="w-7 h-7 text-ruby-500" />
+            Relatórios
+          </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             Análise de desempenho do seu negócio
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 rounded-xl">
             <Calendar className="h-4 w-4" />
             Janeiro 2026
             <ChevronDown className="h-4 w-4" />
           </Button>
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 rounded-xl">
             <Download className="h-4 w-4" />
             Exportar
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Stats */}
       <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
           <StaggerItem key={stat.label}>
-            <AnimatedCard className="p-5">
-              <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-              <div className="flex items-end justify-between mt-2">
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-                <span className={`flex items-center gap-1 text-sm font-medium ${
-                  stat.trend === 'up' ? 'text-emerald-600' : 'text-red-600'
-                }`}>
-                  {stat.trend === 'up' ? (
-                    <TrendingUp className="h-4 w-4" />
-                  ) : (
-                    <TrendingDown className="h-4 w-4" />
-                  )}
-                  {stat.change}
-                </span>
-              </div>
+            <AnimatedCard>
+              <Card className="border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-900">
+                <CardContent className="p-5">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+                  <div className="flex items-end justify-between mt-2">
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
+                    <span className={`flex items-center gap-1 text-sm font-medium ${
+                      stat.trend === 'up' ? 'text-emerald-600' : 'text-red-600'
+                    }`}>
+                      {stat.trend === 'up' ? (
+                        <TrendingUp className="h-4 w-4" />
+                      ) : (
+                        <TrendingDown className="h-4 w-4" />
+                      )}
+                      {stat.change}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
             </AnimatedCard>
           </StaggerItem>
         ))}
       </StaggerContainer>
 
       {/* Revenue Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5 text-ruby-600" />
-            Receita por Dia da Semana
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-end justify-between gap-2 h-48">
-            {revenueByDay.map((day, index) => (
-              <div key={day.day} className="flex-1 flex flex-col items-center gap-2">
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: `${(day.value / maxRevenue) * 100}%` }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="w-full bg-gradient-to-t from-ruby-500 to-ruby-400 rounded-t-lg relative group cursor-pointer"
-                >
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
-                    R$ {day.value.toLocaleString('pt-BR')}
-                  </div>
-                </motion.div>
-                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{day.day}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <Card className="border-0 shadow-sm bg-white dark:bg-gray-900">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-ruby-600" />
+              Receita por Dia da Semana
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-end justify-between gap-2 h-48">
+              {revenueByDay.map((day, index) => (
+                <div key={day.day} className="flex-1 flex flex-col items-center gap-2">
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: `${(day.value / maxRevenue) * 100}%` }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="w-full bg-gradient-to-t from-ruby-500 to-ruby-400 rounded-t-lg relative group cursor-pointer"
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap">
+                      R$ {day.value.toLocaleString('pt-BR')}
+                    </div>
+                  </motion.div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{day.day}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Services */}
@@ -203,6 +274,6 @@ export default function ReportsPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </motion.div>
   );
 }
