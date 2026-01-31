@@ -68,16 +68,13 @@ export const authService = {
   },
 
   async logout(): Promise<void> {
-    try {
-      await api.post('/auth/logout');
-    } finally {
-      Cookies.remove('accessToken');
-      Cookies.remove('refreshToken');
-      Cookies.remove('tenantId');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('tenantId');
-    }
+    // Clear local auth data - no need to call external API
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+    Cookies.remove('tenantId');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('tenantId');
   },
 
   async getCurrentUser(): Promise<User> {

@@ -1,0 +1,30 @@
+import { Skeleton } from '@/components/ui';
+
+export default function Loading() {
+  return (
+    <div className="space-y-6 max-w-2xl">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <Skeleton className="w-10 h-10 rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-44" />
+          <Skeleton className="h-4 w-56" />
+        </div>
+      </div>
+
+      {/* Schedule Grid */}
+      <div className="p-6 rounded-2xl border border-gray-100/80 dark:border-gray-800/40 bg-white dark:bg-gray-900/80 space-y-4">
+        {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+          <div key={i} className="flex items-center gap-4 py-3 border-b border-gray-100 dark:border-gray-800 last:border-0">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-6 w-10 rounded-full" />
+            <Skeleton className="h-9 w-24 rounded-lg" />
+            <Skeleton className="h-4 w-4" />
+            <Skeleton className="h-9 w-24 rounded-lg" />
+          </div>
+        ))}
+        <Skeleton className="h-10 w-32 rounded-xl mt-4" />
+      </div>
+    </div>
+  );
+}

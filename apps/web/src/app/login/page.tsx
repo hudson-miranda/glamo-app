@@ -39,7 +39,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (isAuthenticated) {
       const redirect = searchParams.get('redirect') || '/dashboard';
-      router.push(redirect);
+      router.replace(redirect);
     }
   }, [isAuthenticated, router, searchParams]);
 
@@ -58,7 +58,7 @@ export default function LoginPage() {
       toast.success('Login realizado com sucesso', 'Redirecionando...');
 
       // Pequeno delay para a animação
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       // Verificar se o usuário tem tenant (API retorna tenant como objeto separado)
       if (response.tenant && response.user.hasTenant) {
@@ -70,11 +70,11 @@ export default function LoginPage() {
         );
         
         const redirect = searchParams.get('redirect') || '/dashboard';
-        router.push(redirect);
+        router.replace(redirect);
       } else {
         // Usuário não tem empresa, precisa passar pelo onboarding
         authService.setTokens(response.accessToken, response.refreshToken);
-        router.push('/onboarding');
+        router.replace('/onboarding');
       }
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Credenciais inválidas');

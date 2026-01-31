@@ -2,81 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================
+   GLAMO PREMIUM DESIGN SYSTEM
+   Elegant • Professional • Minimal • Sophisticated
+   ===================================================== */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 8%;
+    /* Background & Foreground - Warm tones for elegance */
+    --background: 30 20% 99%;
+    --foreground: 220 15% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 220 15% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 220 15% 12%;
 
-    /* Ruby Red - Principal */
-    --primary: 350 70% 35%;
+    /* Ruby Red - Principal - More refined, less saturated */
+    --primary: 350 62% 42%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 8%;
+    --secondary: 30 8% 96%;
+    --secondary-foreground: 220 15% 12%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 30 8% 96%;
+    --muted-foreground: 220 8% 48%;
 
-    /* Ruby accent */
-    --accent: 350 70% 97%;
-    --accent-foreground: 350 70% 25%;
+    /* Ruby accent - softer */
+    --accent: 350 35% 97%;
+    --accent-foreground: 350 55% 32%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 65% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 350 70% 35%;
+    --border: 30 8% 91%;
+    --input: 30 8% 91%;
+    --ring: 350 55% 48%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
-    /* Custom Ruby colors */
-    --ruby-50: 350 70% 97%;
-    --ruby-100: 350 65% 94%;
-    --ruby-200: 350 60% 88%;
-    --ruby-300: 350 55% 78%;
-    --ruby-400: 350 60% 58%;
-    --ruby-500: 350 70% 45%;
-    --ruby-600: 350 70% 35%;
-    --ruby-700: 350 75% 28%;
-    --ruby-800: 350 78% 22%;
-    --ruby-900: 350 80% 18%;
+    /* Custom Ruby colors - refined palette */
+    --ruby-50: 350 45% 98%;
+    --ruby-100: 350 40% 95%;
+    --ruby-200: 350 38% 90%;
+    --ruby-300: 350 42% 78%;
+    --ruby-400: 350 52% 58%;
+    --ruby-500: 350 58% 48%;
+    --ruby-600: 350 62% 42%;
+    --ruby-700: 350 65% 34%;
+    --ruby-800: 350 68% 26%;
+    --ruby-900: 350 70% 20%;
   }
 
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 95%;
+    --background: 225 12% 5%;
+    --foreground: 30 15% 94%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 95%;
+    --card: 225 12% 7%;
+    --card-foreground: 30 15% 94%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 225 12% 7%;
+    --popover-foreground: 30 15% 94%;
 
-    --primary: 350 65% 50%;
+    --primary: 350 52% 54%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 225 10% 12%;
+    --secondary-foreground: 30 12% 88%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 225 10% 14%;
+    --muted-foreground: 30 8% 52%;
 
-    --accent: 350 50% 12%;
-    --accent-foreground: 350 65% 80%;
+    --accent: 350 30% 14%;
+    --accent-foreground: 350 48% 72%;
 
-    --destructive: 0 62% 50%;
+    --destructive: 0 52% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 350 65% 50%;
+    --border: 225 10% 14%;
+    --input: 225 10% 14%;
+    --ring: 350 52% 54%;
   }
 }
 
@@ -84,136 +90,254 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    letter-spacing: -0.011em;
+  }
+
+  /* Refined focus states */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ruby-500/25 ring-offset-2 ring-offset-background;
+  }
+
+  /* Better selection color */
+  ::selection {
+    @apply bg-ruby-100 text-ruby-900 dark:bg-ruby-900/40 dark:text-ruby-100;
   }
 }
 
 @layer components {
-  /* Glamo Design System - Ruby Theme */
+  /* =====================================================
+     PREMIUM BUTTON STYLES
+     ===================================================== */
   
-  /* Primary Button - Use these classes directly in components */
   .btn-primary {
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(to right, #d32f4c, #b1233d);
-    color: white;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    transition: all 0.2s;
-    box-shadow: 0 10px 15px -3px rgb(211 47 76 / 0.2);
+    @apply relative px-6 py-3 font-medium text-white rounded-xl overflow-hidden;
+    background: linear-gradient(135deg, hsl(350 58% 46%) 0%, hsl(350 65% 38%) 100%);
+    box-shadow: 
+      0 1px 2px rgba(0,0,0,0.04),
+      0 4px 12px rgba(177, 35, 61, 0.12);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  
   .btn-primary:hover {
-    background: linear-gradient(to right, #b1233d, #942039);
-    box-shadow: 0 10px 25px -5px rgb(211 47 76 / 0.3);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 2px 4px rgba(0,0,0,0.04),
+      0 8px 24px rgba(177, 35, 61, 0.18);
   }
+  
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+  
   .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    @apply opacity-50 cursor-not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 
-  /* Secondary Button */
   .btn-secondary {
-    @apply px-6 py-3 bg-white text-gray-700 rounded-xl font-semibold
-           border border-gray-200 
-           transition-all duration-200 shadow-sm hover:shadow-md
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-6 py-3 bg-white dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 rounded-xl font-medium;
+    @apply border border-gray-200/80 dark:border-gray-700/60;
+    @apply transition-all duration-300;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   }
+  
   .btn-secondary:hover {
-    border-color: #f7aab3;
-    color: #d32f4c;
+    @apply border-ruby-200/80 dark:border-ruby-800/60 text-ruby-600 dark:text-ruby-400;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
 
-  /* Ghost Button */
   .btn-ghost {
-    @apply px-6 py-3 text-gray-600 rounded-xl font-medium
-           hover:bg-gray-50 hover:text-gray-900 transition-all duration-200
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-6 py-3 text-gray-600 dark:text-gray-400 rounded-xl font-medium;
+    @apply hover:bg-gray-50 dark:hover:bg-gray-800/40 hover:text-gray-900 dark:hover:text-gray-100;
+    @apply transition-all duration-300;
   }
 
-  /* Input Fields */
+  /* =====================================================
+     PREMIUM INPUT STYLES
+     ===================================================== */
+  
   .input-field {
-    @apply w-full px-4 py-3 border border-gray-200 rounded-xl 
-           bg-white text-gray-900 placeholder:text-gray-400
-           transition-all duration-200 outline-none;
+    @apply w-full px-4 py-3 border border-gray-200/80 dark:border-gray-700/60 rounded-xl;
+    @apply bg-white dark:bg-gray-800/40 text-gray-900 dark:text-gray-100;
+    @apply placeholder:text-gray-400 dark:placeholder:text-gray-500;
+    @apply transition-all duration-300 outline-none;
   }
+  
   .input-field:focus {
-    border-color: #d32f4c;
-    box-shadow: 0 0 0 3px rgb(211 47 76 / 0.15);
+    @apply border-ruby-400/80 dark:border-ruby-600/60;
+    box-shadow: 0 0 0 3px rgba(177, 35, 61, 0.06);
   }
 
   .input-field-icon {
     @apply pl-12 pr-4;
   }
 
-  /* Card */
+  /* =====================================================
+     PREMIUM CARD STYLES
+     ===================================================== */
+  
   .glamo-card {
-    @apply bg-white rounded-2xl shadow-xl shadow-gray-900/5 border border-gray-100;
+    @apply bg-white dark:bg-gray-900/80 rounded-2xl;
+    @apply border border-gray-100/80 dark:border-gray-800/40;
+    box-shadow: 
+      0 1px 2px rgba(0,0,0,0.02),
+      0 4px 12px rgba(0,0,0,0.03);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glamo-card:hover {
+    box-shadow: 
+      0 2px 4px rgba(0,0,0,0.02),
+      0 8px 24px rgba(0,0,0,0.05);
   }
 
-  /* Auth Layout */
+  /* Premium elevated card */
+  .premium-card {
+    @apply bg-white dark:bg-gray-900/70 rounded-2xl backdrop-blur-xl;
+    @apply border border-gray-100/60 dark:border-gray-800/30;
+    box-shadow: 
+      0 0 0 1px rgba(0,0,0,0.01),
+      0 2px 4px rgba(0,0,0,0.02),
+      0 8px 32px rgba(0,0,0,0.03);
+  }
+
+  /* Stat card with subtle accent */
+  .stat-card {
+    @apply relative overflow-hidden bg-white dark:bg-gray-900/80 rounded-2xl p-6;
+    @apply border border-gray-100/60 dark:border-gray-800/40;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .stat-card:hover {
+    @apply border-gray-150 dark:border-gray-700/50;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    transform: translateY(-1px);
+  }
+
+  /* =====================================================
+     AUTH LAYOUT - Refined
+     ===================================================== */
+  
   .auth-container {
     @apply min-h-screen flex;
   }
 
   .auth-form-side {
-    @apply flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-white;
+    @apply flex-1 flex items-center justify-center p-8;
+    background: linear-gradient(180deg, hsl(30 20% 99%) 0%, hsl(30 12% 97%) 100%);
   }
 
   .auth-brand-side {
     @apply hidden lg:flex flex-1 items-center justify-center p-12 relative overflow-hidden;
-    background: linear-gradient(to bottom right, #d32f4c, #b1233d, #942039);
+    background: linear-gradient(160deg, hsl(350 58% 44%) 0%, hsl(350 68% 30%) 100%);
   }
 
-  /* Logo */
+  /* =====================================================
+     PREMIUM LOGO STYLES
+     ===================================================== */
+  
   .glamo-logo-icon {
     @apply w-10 h-10 rounded-xl flex items-center justify-center;
-    background: linear-gradient(to bottom right, #e74c64, #b1233d);
-    box-shadow: 0 10px 15px -3px rgb(231 76 100 / 0.3);
+    background: linear-gradient(135deg, hsl(350 55% 52%) 0%, hsl(350 65% 38%) 100%);
+    box-shadow: 0 4px 12px rgba(177, 35, 61, 0.18);
   }
 
   .glamo-logo-text {
-    @apply text-2xl font-bold;
-    background: linear-gradient(to right, #d32f4c, #b1233d);
+    @apply text-2xl font-semibold tracking-tight;
+    background: linear-gradient(135deg, hsl(350 55% 46%) 0%, hsl(350 65% 36%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Links */
+  /* =====================================================
+     LINKS - Subtle & Elegant
+     ===================================================== */
+  
   .link-primary {
-    color: #d32f4c;
-    font-weight: 500;
-    transition: color 0.2s;
+    @apply text-ruby-600 dark:text-ruby-400 font-medium;
+    @apply transition-colors duration-300;
   }
+  
   .link-primary:hover {
-    color: #b1233d;
+    @apply text-ruby-700 dark:text-ruby-300;
   }
 
-  /* Decorative Elements */
   .decorative-blob {
-    @apply absolute rounded-full blur-3xl opacity-30;
+    @apply absolute rounded-full blur-3xl opacity-20;
   }
 }
 
 @layer utilities {
-  /* Elegant gradient backgrounds */
+  /* =====================================================
+     PREMIUM GRADIENTS
+     ===================================================== */
+  
   .bg-gradient-elegant {
-    background: linear-gradient(135deg, hsl(350 70% 35%) 0%, hsl(350 80% 18%) 100%);
+    background: linear-gradient(160deg, hsl(350 58% 44%) 0%, hsl(350 68% 30%) 100%);
   }
 
   .bg-gradient-subtle {
-    background: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 100%) 100%);
+    background: linear-gradient(180deg, hsl(30 20% 99%) 0%, hsl(30 12% 97%) 100%);
   }
 
-  /* Shimmer animation for loading skeletons */
+  .bg-gradient-mesh {
+    background: 
+      radial-gradient(ellipse at 20% 30%, rgba(177, 35, 61, 0.02) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(177, 35, 61, 0.015) 0%, transparent 50%),
+      linear-gradient(180deg, hsl(30 20% 99%) 0%, hsl(0 0% 100%) 100%);
+  }
+
+  /* =====================================================
+     ANIMATIONS - Smooth & Subtle
+     ===================================================== */
+  
   @keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
   }
 
   .animate-shimmer {
-    animation: shimmer 2s infinite;
+    animation: shimmer 2.5s infinite ease-in-out;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
   /* Smooth scroll */
@@ -221,29 +345,33 @@
     scroll-behavior: smooth;
   }
 
-  /* Glassmorphism effect */
+  /* =====================================================
+     GLASSMORPHISM - Refined
+     ===================================================== */
+  
   .glass {
-    @apply backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border border-white/20 dark:border-gray-700/50;
+    @apply backdrop-blur-xl bg-white/75 dark:bg-gray-900/75;
+    @apply border border-white/25 dark:border-gray-700/25;
   }
 
   .glass-card {
-    @apply backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border border-gray-200/50 dark:border-gray-700/50 shadow-xl;
+    @apply backdrop-blur-xl bg-white/65 dark:bg-gray-900/65;
+    @apply border border-gray-200/35 dark:border-gray-700/35;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.03);
   }
 
-  /* Focus visible for accessibility */
-  .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ruby-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900;
-  }
-
-  /* Custom scrollbar */
+  /* =====================================================
+     SCROLLBAR - Minimal
+     ===================================================== */
+  
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: hsl(0 0% 80%) transparent;
+    scrollbar-color: hsl(0 0% 88%) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-track {
@@ -251,67 +379,148 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: hsl(0 0% 80%);
+    background-color: hsl(0 0% 88%);
     border-radius: 9999px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(0 0% 60%);
+    background-color: hsl(0 0% 75%);
   }
 
   .dark .scrollbar-thin {
-    scrollbar-color: hsl(0 0% 30%) transparent;
+    scrollbar-color: hsl(0 0% 22%) transparent;
   }
 
   .dark .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: hsl(0 0% 30%);
+    background-color: hsl(0 0% 22%);
   }
 
   .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(0 0% 40%);
+    background-color: hsl(0 0% 32%);
   }
 
-  /* Ruby shadow utilities - custom opacity variants */
+  /* Hidden scrollbar */
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* =====================================================
+     SHADOWS - Premium Soft Shadows
+     ===================================================== */
+  
+  .shadow-soft-xs {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02), 0 1px 4px rgba(0,0,0,0.02);
+  }
+
+  .shadow-soft-sm {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02), 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .shadow-soft {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02), 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  .shadow-soft-lg {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 12px 32px rgba(0,0,0,0.05);
+  }
+
+  .shadow-soft-xl {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.02), 0 24px 48px rgba(0,0,0,0.06);
+  }
+
+  /* Ruby accent shadows - subtle */
   .shadow-ruby-500\/15 {
-    --tw-shadow-color: rgb(231 76 100 / 0.15);
+    --tw-shadow-color: rgb(200 55 80 / 0.10);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .shadow-ruby-500\/20 {
-    --tw-shadow-color: rgb(231 76 100 / 0.20);
+    --tw-shadow-color: rgb(200 55 80 / 0.12);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .shadow-ruby-500\/25 {
-    --tw-shadow-color: rgb(231 76 100 / 0.25);
+    --tw-shadow-color: rgb(200 55 80 / 0.15);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .shadow-ruby-500\/30 {
-    --tw-shadow-color: rgb(231 76 100 / 0.30);
+    --tw-shadow-color: rgb(200 55 80 / 0.18);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .shadow-ruby-600\/15 {
-    --tw-shadow-color: rgb(211 47 76 / 0.15);
+    --tw-shadow-color: rgb(177 35 61 / 0.10);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .shadow-ruby-600\/20 {
-    --tw-shadow-color: rgb(211 47 76 / 0.20);
+    --tw-shadow-color: rgb(177 35 61 / 0.12);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .shadow-ruby-600\/25 {
-    --tw-shadow-color: rgb(211 47 76 / 0.25);
+    --tw-shadow-color: rgb(177 35 61 / 0.15);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .shadow-ruby-600\/30 {
-    --tw-shadow-color: rgb(211 47 76 / 0.30);
+    --tw-shadow-color: rgb(177 35 61 / 0.18);
     --tw-shadow: var(--tw-shadow-colored);
   }
 
   /* Ring opacity variant */
   .ring-ruby-500\/20 {
-    --tw-ring-color: rgb(231 76 100 / 0.20);
+    --tw-ring-color: rgb(200 55 80 / 0.12);
   }
 
-  /* Text balance for better typography */
+  /* =====================================================
+     FOCUS STATES - Elegant Ring
+     ===================================================== */
+  
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ruby-500/25;
+    @apply focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900;
+  }
+
+  /* =====================================================
+     TYPOGRAPHY - Refined
+     ===================================================== */
+  
   .text-balance {
     text-wrap: balance;
+  }
+
+  .heading-lg {
+    @apply text-2xl font-semibold tracking-tight text-gray-900 dark:text-white;
+    letter-spacing: -0.025em;
+  }
+
+  .heading-md {
+    @apply text-lg font-semibold tracking-tight text-gray-900 dark:text-white;
+    letter-spacing: -0.02em;
+  }
+
+  .heading-sm {
+    @apply text-base font-medium text-gray-900 dark:text-white;
+    letter-spacing: -0.015em;
+  }
+
+  .text-muted {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+
+  .text-subtle {
+    @apply text-gray-400 dark:text-gray-500;
+  }
+
+  /* =====================================================
+     DIVIDERS - Subtle
+     ===================================================== */
+  
+  .divider {
+    @apply border-t border-gray-100 dark:border-gray-800/40;
+  }
+
+  .divider-vertical {
+    @apply border-l border-gray-100 dark:border-gray-800/40;
   }
 }

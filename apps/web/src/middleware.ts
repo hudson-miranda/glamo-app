@@ -3,13 +3,15 @@ import type { NextRequest } from 'next/server';
 
 // Rotas públicas que não requerem autenticação
 const publicRoutes = [
-  '/',
   '/login',
   '/register',
   '/forgot-password',
   '/reset-password',
   '/verify-email',
 ];
+
+// Landing page - pública mas redireciona se autenticado
+const landingPage = '/';
 
 // Rotas de autenticação (redirecionar para dashboard se já autenticado)
 const authRoutes = [
@@ -35,8 +37,16 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
-  // Se está na landing page, permitir acesso
-  if (pathname === '/') {
+  // Se está na landing page
+  if (pathname === landingPage) {
+    // Se está autenticado, redirecionar para o dashboard (usando header especial)
+    if (accessToken) {
+      // Adicionar header para indicar que o usuário está autenticado
+      const response = NextResponse.next();
+      response.headers.set('x-authenticated', 'true');
+      return response;
+    }
+    // Se não está autenticado, mostrar landing page
     return NextResponse.next();
   }
   
@@ -47,7 +57,7 @@ export function middleware(request: NextRequest) {
   
   // Se está em rota protegida e não tem token, redirecionar para login
   const isPublicRoute = publicRoutes.some(route => 
-    pathname === route || (route !== '/' && pathname.startsWith(route))
+    pathname === route || pathname.startsWith(route)
   );
   
   if (!isPublicRoute && !accessToken) {

@@ -8,7 +8,9 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm transition-all duration-200',
+      'rounded-2xl border border-gray-100/80 dark:border-gray-800/40 bg-white dark:bg-gray-900/80 text-gray-900 dark:text-gray-100 transition-all duration-300',
+      'shadow-[0_1px_2px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.03)]',
+      'hover:shadow-[0_2px_4px_rgba(0,0,0,0.02),0_8px_24px_rgba(0,0,0,0.05)]',
       className,
     )}
     {...props}
@@ -38,6 +40,7 @@ const CardTitle = React.forwardRef<
       'text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-white',
       className,
     )}
+    style={{ letterSpacing: '-0.02em' }}
     {...props}
   />
 ));

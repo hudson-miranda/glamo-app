@@ -4,15 +4,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ring-offset-white dark:ring-offset-gray-950 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ruby-500/50 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ring-offset-white dark:ring-offset-gray-950 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ruby-500/25 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-gradient-to-r from-ruby-600 to-ruby-700 text-white hover:shadow-lg hover:shadow-ruby-600/25 hover:from-ruby-700 hover:to-ruby-800',
-        destructive: 'bg-red-600 text-white hover:bg-red-700 dark:bg-red-900 dark:hover:bg-red-800',
-        outline: 'border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-ruby-600 dark:hover:text-ruby-400 hover:border-ruby-200 dark:hover:border-ruby-800',
-        secondary: 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700',
-        ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+        default: 'bg-gradient-to-br from-ruby-500 to-ruby-600 text-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_rgba(177,35,61,0.12)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_20px_rgba(177,35,61,0.18)] hover:-translate-y-0.5 active:translate-y-0',
+        destructive: 'bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 shadow-sm',
+        outline: 'border border-gray-200/80 dark:border-gray-700/60 bg-white dark:bg-gray-900/80 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-ruby-600 dark:hover:text-ruby-400 hover:border-ruby-200/60 dark:hover:border-ruby-800/40 shadow-[0_1px_2px_rgba(0,0,0,0.02)]',
+        secondary: 'bg-gray-100 dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 hover:bg-gray-150 dark:hover:bg-gray-700/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)]',
+        ghost: 'hover:bg-gray-100/80 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-100',
         link: 'text-ruby-600 dark:text-ruby-400 underline-offset-4 hover:underline',
       },
       size: {

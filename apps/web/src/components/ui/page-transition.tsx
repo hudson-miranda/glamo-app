@@ -16,19 +16,19 @@ const variants: Record<string, Variants> = {
     exit: { opacity: 0 },
   },
   slide: {
-    initial: { opacity: 0, x: 20 },
+    initial: { opacity: 0, x: 12 },
     animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -20 },
+    exit: { opacity: 0, x: -12 },
   },
   scale: {
-    initial: { opacity: 0, scale: 0.95 },
+    initial: { opacity: 0, scale: 0.98 },
     animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 1.05 },
+    exit: { opacity: 0, scale: 1.02 },
   },
   slideUp: {
-    initial: { opacity: 0, y: 20 },
+    initial: { opacity: 0, y: 10 },
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 },
+    exit: { opacity: 0, y: -10 },
   },
 };
 
@@ -43,7 +43,7 @@ export function PageTransition({
       animate="animate"
       exit="exit"
       variants={variants[variant]}
-      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       className={className}
     >
       {children}
@@ -90,11 +90,11 @@ export function StaggerItem({
   return (
     <motion.div
       variants={{
-        initial: { opacity: 0, y: 20 },
+        initial: { opacity: 0, y: 8 },
         animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -20 },
+        exit: { opacity: 0, y: -8 },
       }}
-      transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       className={className}
     >
       {children}
@@ -102,7 +102,7 @@ export function StaggerItem({
   );
 }
 
-// Card hover effect
+// Card hover effect - subtle and elegant
 export function AnimatedCard({
   children,
   className,
@@ -112,8 +112,7 @@ export function AnimatedCard({
 }) {
   return (
     <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ y: -2, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } }}
       className={className}
     >
       {children}

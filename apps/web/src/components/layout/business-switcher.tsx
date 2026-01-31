@@ -63,7 +63,7 @@ export function BusinessSwitcher({ collapsed = false, className }: BusinessSwitc
   };
 
   const handleBusinessSettings = () => {
-    router.push('/dashboard/settings/business');
+    router.push('/settings/business');
   };
 
   if (collapsed) {

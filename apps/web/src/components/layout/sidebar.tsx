@@ -49,7 +49,7 @@ const navigation: NavSection[] = [
       },
       {
         name: 'Agendamentos',
-        href: '/dashboard/appointments',
+        href: '/appointments',
         icon: Calendar,
         badge: 3,
       },
@@ -60,22 +60,22 @@ const navigation: NavSection[] = [
     items: [
       {
         name: 'Clientes',
-        href: '/dashboard/customers',
+        href: '/customers',
         icon: Users,
       },
       {
         name: 'Serviços',
-        href: '/dashboard/services',
+        href: '/services',
         icon: Scissors,
       },
       {
         name: 'Profissionais',
-        href: '/dashboard/professionals',
+        href: '/professionals',
         icon: UserCog,
       },
       {
         name: 'Estoque',
-        href: '/dashboard/inventory',
+        href: '/inventory',
         icon: Package,
       },
     ],
@@ -85,17 +85,17 @@ const navigation: NavSection[] = [
     items: [
       {
         name: 'Caixa',
-        href: '/dashboard/financial',
+        href: '/financial',
         icon: Wallet,
       },
       {
         name: 'Transações',
-        href: '/dashboard/financial/transactions',
+        href: '/financial/transactions',
         icon: DollarSign,
       },
       {
         name: 'Relatórios',
-        href: '/dashboard/reports',
+        href: '/reports',
         icon: BarChart3,
       },
     ],
@@ -105,17 +105,17 @@ const navigation: NavSection[] = [
     items: [
       {
         name: 'Campanhas',
-        href: '/dashboard/marketing',
+        href: '/marketing',
         icon: Megaphone,
       },
       {
         name: 'Fidelidade',
-        href: '/dashboard/marketing/loyalty',
+        href: '/marketing/loyalty',
         icon: Gift,
       },
       {
         name: 'Avaliações',
-        href: '/dashboard/marketing/reviews',
+        href: '/marketing/reviews',
         icon: Star,
       },
     ],
@@ -125,13 +125,13 @@ const navigation: NavSection[] = [
     items: [
       {
         name: 'Notificações',
-        href: '/dashboard/notifications',
+        href: '/notifications',
         icon: Bell,
         badge: 5,
       },
       {
         name: 'Configurações',
-        href: '/dashboard/settings',
+        href: '/settings',
         icon: Settings,
       },
     ],
@@ -145,46 +145,46 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300',
+        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-gray-100/80 dark:border-gray-800/40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl transition-all duration-400 ease-out',
         // Desktop: normal behavior
         'hidden md:flex',
-        isCollapsed ? 'md:w-16' : 'md:w-64',
+        isCollapsed ? 'md:w-[68px]' : 'md:w-64',
         // Mobile: slide in from left when open
-        isOpen && 'flex w-[280px] shadow-2xl',
+        isOpen && 'flex w-[280px] shadow-soft-xl',
       )}
     >
       {/* Logo */}
-      <div className="flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4">
+      <div className="flex h-16 items-center justify-between border-b border-gray-100/80 dark:border-gray-800/40 px-4">
         {/* Mobile: always show full logo */}
-        <Link href="/dashboard" onClick={close} className="flex items-center gap-2 md:hidden">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-700 text-white font-bold shadow-lg shadow-ruby-500/25">
+        <Link href="/dashboard" onClick={close} className="flex items-center gap-2.5 md:hidden">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold shadow-[0_4px_12px_rgba(177,35,61,0.15)]">
             G
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-ruby-600 to-ruby-700 bg-clip-text text-transparent">
+          <span className="text-xl font-semibold tracking-tight bg-gradient-to-r from-ruby-500 to-ruby-600 bg-clip-text text-transparent">
             Glamo
           </span>
         </Link>
         {/* Mobile close button */}
         <button
           onClick={close}
-          className="md:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="md:hidden p-2 rounded-xl hover:bg-gray-100/80 dark:hover:bg-gray-800/50 transition-colors duration-300"
         >
-          <X className="h-5 w-5 text-gray-500" />
+          <X className="h-5 w-5 text-gray-400" />
         </button>
         {/* Desktop: conditional logo */}
         {!isCollapsed && (
-          <Link href="/dashboard" className="hidden md:flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-700 text-white font-bold shadow-lg shadow-ruby-500/25">
+          <Link href="/dashboard" className="hidden md:flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold shadow-[0_4px_12px_rgba(177,35,61,0.15)]">
               G
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-ruby-600 to-ruby-700 bg-clip-text text-transparent">
+            <span className="text-xl font-semibold tracking-tight bg-gradient-to-r from-ruby-500 to-ruby-600 bg-clip-text text-transparent">
               Glamo
             </span>
           </Link>
         )}
         {isCollapsed && (
           <Link href="/dashboard" className="hidden md:block mx-auto">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-700 text-white font-bold shadow-lg shadow-ruby-500/25">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 text-white font-semibold shadow-[0_4px_12px_rgba(177,35,61,0.15)]">
               G
             </div>
           </Link>
@@ -195,19 +195,19 @@ export function Sidebar() {
       <button
         onClick={() => (isCollapsed ? expand() : collapse())}
         className={cn(
-          'absolute -right-3 top-20 z-50 hidden md:flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors',
+          'absolute -right-3 top-20 z-50 hidden md:flex h-6 w-6 items-center justify-center rounded-full border border-gray-200/80 dark:border-gray-700/60 bg-white dark:bg-gray-800 shadow-soft-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300',
         )}
       >
         {isCollapsed ? (
-          <ChevronRight className="h-3.5 w-3.5 text-gray-600 dark:text-gray-400" />
+          <ChevronRight className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
         ) : (
-          <ChevronLeft className="h-3.5 w-3.5 text-gray-600 dark:text-gray-400" />
+          <ChevronLeft className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
         )}
       </button>
 
       {/* Business Switcher - Mobile: always expanded, Desktop: respects isCollapsed */}
       <div className={cn(
-        "border-b border-gray-200 dark:border-gray-800 p-3",
+        "border-b border-gray-100/80 dark:border-gray-800/40 p-3",
         isCollapsed && "md:p-2"
       )}>
         <BusinessSwitcher collapsed={false} className="md:hidden" />
@@ -220,17 +220,17 @@ export function Sidebar() {
           <div key={section.title} className={cn(sectionIndex > 0 && "mt-6")}>
             {/* Section Title - Mobile: always show, Desktop: hide when collapsed */}
             <h3 className={cn(
-              "mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500",
+              "mb-2 px-3 text-[11px] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500",
               isCollapsed && "md:hidden"
             )}>
               {section.title}
             </h3>
             {isCollapsed && sectionIndex > 0 && (
-              <div className="my-3 mx-2 border-t border-gray-200 dark:border-gray-800 hidden md:block" />
+              <div className="my-3 mx-2 border-t border-gray-100/80 dark:border-gray-800/40 hidden md:block" />
             )}
             
             {/* Section Items */}
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {section.items.map((item) => {
                 // Dashboard só fica ativo com match exato, outras páginas usam startsWith
                 const isActive = item.href === '/dashboard'
@@ -242,30 +242,30 @@ export function Sidebar() {
                     href={item.href}
                     onClick={close}
                     className={cn(
-                      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 group relative',
+                      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 group relative',
                       isActive
-                        ? 'bg-gradient-to-r from-ruby-500 to-ruby-600 text-white shadow-lg shadow-ruby-500/25'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white',
+                        ? 'bg-gradient-to-r from-ruby-500 to-ruby-600 text-white shadow-[0_2px_8px_rgba(177,35,61,0.15)]'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100/80 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white',
                       isCollapsed && 'md:justify-center md:px-2',
                     )}
                     title={isCollapsed ? item.name : undefined}
                   >
-                    <item.icon className={cn('h-5 w-5 flex-shrink-0', isActive && 'text-white')} />
+                    <item.icon className={cn('h-[18px] w-[18px] flex-shrink-0', isActive && 'text-white')} />
                     {/* Mobile: always show text, Desktop: respect isCollapsed */}
                     <span className={cn("flex-1", isCollapsed && "md:hidden")}>{item.name}</span>
                     {item.badge && (
                       <span className={cn(
-                        "flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-semibold",
+                        "flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-medium",
                         isActive 
                           ? "bg-white/20 text-white"
-                          : "bg-ruby-100 dark:bg-ruby-950/50 text-ruby-600 dark:text-ruby-400",
+                          : "bg-ruby-50 dark:bg-ruby-950/50 text-ruby-600 dark:text-ruby-400",
                         isCollapsed && "md:hidden"
                       )}>
                         {item.badge}
                       </span>
                     )}
                     {isCollapsed && item.badge && (
-                      <span className="absolute -right-1 -top-1 hidden md:flex h-4 w-4 items-center justify-center rounded-full bg-ruby-500 text-[10px] font-bold text-white">
+                      <span className="absolute -right-1 -top-1 hidden md:flex h-4 w-4 items-center justify-center rounded-full bg-ruby-500 text-[10px] font-medium text-white">
                         {typeof item.badge === 'number' && item.badge > 9 ? '9+' : item.badge}
                       </span>
                     )}
@@ -278,18 +278,18 @@ export function Sidebar() {
       </nav>
 
       {/* Footer - Help */}
-      <div className="border-t border-gray-200 dark:border-gray-800 p-3">
+      <div className="border-t border-gray-100/80 dark:border-gray-800/40 p-3">
         {/* Mobile: always show full, Desktop: respect isCollapsed */}
         <Link
-          href="/dashboard/help"
+          href="/help"
           onClick={close}
           className={cn(
-            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-all",
+            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100/80 dark:hover:bg-gray-800/50 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-300",
             isCollapsed && "md:justify-center md:p-2.5"
           )}
           title={isCollapsed ? "Ajuda & Suporte" : undefined}
         >
-          <HelpCircle className="h-5 w-5" />
+          <HelpCircle className="h-[18px] w-[18px]" />
           <span className={cn(isCollapsed && "md:hidden")}>Ajuda & Suporte</span>
         </Link>
       </div>

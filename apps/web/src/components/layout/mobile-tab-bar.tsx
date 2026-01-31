@@ -28,17 +28,17 @@ const tabs: TabItem[] = [
   },
   {
     name: 'Agenda',
-    href: '/dashboard/appointments',
+    href: '/appointments',
     icon: Calendar,
   },
   {
     name: 'Clientes',
-    href: '/dashboard/customers',
+    href: '/customers',
     icon: Users,
   },
   {
     name: 'Caixa',
-    href: '/dashboard/financial',
+    href: '/financial',
     icon: DollarSign,
   },
   {
@@ -56,8 +56,8 @@ export function MobileTabBar() {
     <>
       {/* Tab Bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
-        {/* Glass effect background */}
-        <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-800/50" />
+        {/* Glass effect background - more refined */}
+        <div className="absolute inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl border-t border-gray-100/80 dark:border-gray-800/40" />
         
         {/* Safe area padding for iOS */}
         <div className="relative px-2 pb-safe">
@@ -77,23 +77,23 @@ export function MobileTabBar() {
                     className="flex flex-col items-center justify-center min-w-[64px] py-1 relative group"
                   >
                     <div className={cn(
-                      "relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300",
+                      "relative flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-300",
                       isOpen
-                        ? "bg-gradient-to-br from-ruby-500 to-ruby-600 shadow-lg shadow-ruby-500/30"
-                        : "group-hover:bg-gray-100 dark:group-hover:bg-gray-800"
+                        ? "bg-gradient-to-br from-ruby-500 to-ruby-600 shadow-[0_4px_12px_rgba(177,35,61,0.15)]"
+                        : "group-hover:bg-gray-100/80 dark:group-hover:bg-gray-800/50"
                     )}>
                       <tab.icon className={cn(
-                        "h-5 w-5 transition-colors",
+                        "h-[18px] w-[18px] transition-colors duration-300",
                         isOpen
                           ? "text-white"
                           : "text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200"
                       )} />
                     </div>
                     <span className={cn(
-                      "mt-1 text-[10px] font-medium transition-colors",
+                      "mt-1 text-[10px] font-medium transition-colors duration-300",
                       isOpen
                         ? "text-ruby-600 dark:text-ruby-400"
-                        : "text-gray-500 dark:text-gray-400"
+                        : "text-gray-400 dark:text-gray-500"
                     )}>
                       {tab.name}
                     </span>
@@ -108,13 +108,13 @@ export function MobileTabBar() {
                   className="flex flex-col items-center justify-center min-w-[64px] py-1 relative group"
                 >
                   <div className={cn(
-                    "relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300",
+                    "relative flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-300",
                     isActive
-                      ? "bg-gradient-to-br from-ruby-500 to-ruby-600 shadow-lg shadow-ruby-500/30"
-                      : "group-hover:bg-gray-100 dark:group-hover:bg-gray-800"
+                      ? "bg-gradient-to-br from-ruby-500 to-ruby-600 shadow-[0_4px_12px_rgba(177,35,61,0.15)]"
+                      : "group-hover:bg-gray-100/80 dark:group-hover:bg-gray-800/50"
                   )}>
                     <tab.icon className={cn(
-                      "h-5 w-5 transition-colors",
+                      "h-[18px] w-[18px] transition-colors duration-300",
                       isActive
                         ? "text-white"
                         : "text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200"
@@ -122,16 +122,16 @@ export function MobileTabBar() {
                     {isActive && (
                       <motion.div
                         layoutId="tabIndicator"
-                        className="absolute inset-0 rounded-2xl bg-gradient-to-br from-ruby-500 to-ruby-600 -z-10"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        className="absolute inset-0 rounded-xl bg-gradient-to-br from-ruby-500 to-ruby-600 -z-10"
+                        transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                       />
                     )}
                   </div>
                   <span className={cn(
-                    "mt-1 text-[10px] font-medium transition-colors",
+                    "mt-1 text-[10px] font-medium transition-colors duration-300",
                     isActive
                       ? "text-ruby-600 dark:text-ruby-400"
-                      : "text-gray-500 dark:text-gray-400"
+                      : "text-gray-400 dark:text-gray-500"
                   )}>
                     {tab.name}
                   </span>
@@ -148,8 +148,9 @@ export function MobileTabBar() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           onClick={toggle}
-          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm md:hidden"
         />
       )}
     </>
